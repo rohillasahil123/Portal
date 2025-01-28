@@ -45,8 +45,6 @@ const UploadCsv = ({ onUpload }) => {
           complete: (result) => {
             onUpload(result.data);
             setSuccessMessage("CSV file uploaded successfully!");
-
-           console.log(result.data , "uty")
           },
           error: () => {
             setSuccessMessage("Error while parsing the file. Please try again.");
