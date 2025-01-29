@@ -6,7 +6,7 @@ import MyLeads from "./MyLeads";
 import IndividualLead from "./SingleLead"   
 import Loginpage from "./Login" 
 import Board from "./Board";
-import AdminDeshBoaard from "./AdminDeshBoaard";
+import AdminDashBoaard from "./Admindashboard"
 import ManageAll from "./ManageAll"
 import Eligibility from "./Eli"
 // import EMICalculator from "./EMICalculator"
@@ -54,6 +54,10 @@ const Dashboard = () => {
               path="/myleads"
               element={ <MyLeads leads={leads} /> }
             />
+             <Route
+              path="/admin"
+              element={ <AdminDashBoaard /> }
+            />
             <Route
               path="/manage/partner"
               element={<ManageAll/>}
@@ -65,10 +69,6 @@ const Dashboard = () => {
                <Route
               path="/eli"
               element={ <Eligibility/>  }
-            />
-             <Route
-              path="/admin/dashboard"
-              element={<AdminDeshBoaard/>}
             />
             <Route
               path="/individual"

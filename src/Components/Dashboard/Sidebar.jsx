@@ -29,46 +29,51 @@ const Sidebar = ({ isAdmin }) => {
         <nav>
           <ul>
             <li className="mb-4">
-              <Link to="/" className="text-lg hover:text-yellow-400">
+              <Link to="/" className="text-lg hover:text-blue-400">
                 Board
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/uploadcsv" className="text-lg hover:text-yellow-400">
+              <Link to="/uploadcsv" className="text-lg hover:text-blue-400">
                 Upload CSV
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/individual" className="text-lg hover:text-yellow-400">
+              <Link to="/admin" className="text-lg hover:text-blue-400">
+                Admin DashBoard
+              </Link>
+            </li>
+            <li className="mb-4">
+              <Link to="/individual" className="text-lg hover:text-blue-400">
                 Individual Lead
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/eli" className="text-lg hover:text-yellow-400">
+              <Link to="/eli" className="text-lg hover:text-blue-400">
                 Eligibility Checker
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/EmiCalculator" className="text-lg hover:text-yellow-400">
+              <Link to="/EmiCalculator" className="text-lg hover:text-blue-400">
                 EMI Calculator
               </Link>
             </li>
             {isAdmin && (
               <>
                 <li className="mb-4">
-                  <Link to="/admin/dashboard" className="text-lg hover:text-yellow-400">
+                  <Link to="/admin/dashboard" className="text-lg hover:text-blue-400">
                     Admin Dashboard
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link to="/manage/partner" className="text-lg hover:text-yellow-400">
+                  <Link to="/manage/partner" className="text-lg hover:text-blue-400">
                     Manage All Partners
                   </Link>
                 </li>
               </>
             )}
             <li className="mb-4">
-              <Link to="/myleads" className="text-lg hover:text-yellow-400">
+              <Link to="/myleads" className="text-lg hover:text-blue-400">
                 My Leads
               </Link>
             </li>

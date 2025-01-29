@@ -8,12 +8,8 @@ const MyLeads = () => {
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
   const [leadsPerPage, setLeadsPerPage] = useState(10);
-
-  // Date range state
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -43,7 +39,6 @@ const MyLeads = () => {
         }));
         setLeads(updatedLeads);
         setFilteredLeads(updatedLeads);
-
         setLoading(false);
       } catch (err) {
         console.error("Error fetching leads:", err);
@@ -59,7 +54,6 @@ const MyLeads = () => {
     if (Array.isArray(leads)) {
       const filtered = leads.filter((lead) => {
         return Object.values(lead).some((value) => {
-          // Convert both the value and search term to string for comparison
           if (value && typeof value === "string") {
             return value.toLowerCase().includes(searchTerm.toLowerCase());
           }
@@ -73,35 +67,30 @@ const MyLeads = () => {
     }
   }, [leads, searchTerm]);
 
-  // Handle date range filter
   const handleDateSearch = () => {
     if (startDate && endDate) {
       const filtered = leads.filter((lead) => {
-        const leadDate = new Date(lead.date); // Assuming 'date' field is in the lead object
-        return (
-          leadDate >= new Date(startDate) && leadDate <= new Date(endDate)
-        );
+        const leadDate = new Date(lead.date);
+        return leadDate >= new Date(startDate) && leadDate <= new Date(endDate);
       });
       setFilteredLeads(filtered);
     }
   };
 
-  // Calculate current leads for the page
   const indexOfLastLead = currentPage * leadsPerPage;
   const indexOfFirstLead = indexOfLastLead - leadsPerPage;
   const currentLeads = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
-
   const isLeadsValid = Array.isArray(filteredLeads) && filteredLeads.length > 0;
 
   const downloadCSV = () => {
     const headers = Object.keys(filteredLeads[0])
-      .filter((key) => key !== "_id") // Exclude _id from headers
+      .filter((key) => key !== "_id")
       .join(",");
     const rows = filteredLeads
       .map((lead) =>
         Object.values(lead)
-          .filter((_, idx) => Object.keys(lead)[idx] !== "_id") // Exclude _id from rows
-          .map((value) => `"${value || "N/A"}"`)
+          .filter((_, idx) => Object.keys(lead)[idx] !== "_id")
+          .map((value) => `"${value}"`)
           .join(",")
       )
       .join("\n");
@@ -109,7 +98,6 @@ const MyLeads = () => {
     const csvContent = `${headers}\n${rows}`;
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = url;
     a.download = "leads.csv";
@@ -135,7 +123,7 @@ const MyLeads = () => {
   // Handle Leads per Page change
   const handleLeadsPerPageChange = (e) => {
     setLeadsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to the first page
+    setCurrentPage(1);
   };
 
   if (loading) return <p>Loading leads...</p>;
@@ -144,7 +132,6 @@ const MyLeads = () => {
   return (
     <div className="overflow-x-auto w-[70%] mb-6 ml-64">
       <h2 className="text-2xl font-bold mb-4">My Leads</h2>
-
       <div className="flex justify-between sticky">
         <div className="mb-4">
           <input
@@ -166,7 +153,6 @@ const MyLeads = () => {
           </button>
         </div>
 
-        {/* Leads per page dropdown */}
         <div className="mb-4">
           <select
             value={leadsPerPage}
@@ -180,7 +166,6 @@ const MyLeads = () => {
         </div>
       </div>
 
-      {/* Date Range Inputs */}
       <div className="flex mb-4">
         <input
           type="date"
@@ -202,7 +187,6 @@ const MyLeads = () => {
         </button>
       </div>
 
-      {/* Leads Table */}
       {isLeadsValid ? (
         <>
           <table className="min-w-full bg-white border border-gray-200">
@@ -229,15 +213,17 @@ const MyLeads = () => {
             <tbody>
               {currentLeads.map((lead, index) => (
                 <tr key={index}>
-                  {/* Add Index Column */}
                   <td className="px-4 py-2 border border-gray-300">
                     {index + 1 + indexOfFirstLead}
                   </td>
                   {Object.entries(lead)
-                    .filter(([key]) => key !== "_id") // Exclude _id from rows
+                    .filter(([key]) => key !== "_id")
                     .map(([key, value], idx) => (
-                      <td key={idx} className="px-4 py-2 border border-gray-300">
-                        {value || "N/A"}
+                      <td
+                        key={idx}
+                        className="px-4 py-2 border border-gray-300"
+                      >
+                        {value !== "N/A" ? value : null}
                       </td>
                     ))}
                   <td className="px-4 py-2 border border-gray-300">
@@ -256,8 +242,6 @@ const MyLeads = () => {
               ))}
             </tbody>
           </table>
-
-          {/* Pagination Controls */}
           <div className="flex justify-between mt-4">
             <button
               onClick={previousPage}
@@ -267,12 +251,15 @@ const MyLeads = () => {
               Previous
             </button>
             <span>
-              Page {currentPage} of {Math.ceil(filteredLeads.length / leadsPerPage)}
+              Page {currentPage} of{" "}
+              {Math.ceil(filteredLeads.length / leadsPerPage)}
             </span>
             <button
               onClick={nextPage}
               className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-              disabled={currentPage === Math.ceil(filteredLeads.length / leadsPerPage)}
+              disabled={
+                currentPage === Math.ceil(filteredLeads.length / leadsPerPage)
+              }
             >
               Next
             </button>
@@ -284,5 +271,4 @@ const MyLeads = () => {
     </div>
   );
 };
-
 export default MyLeads;

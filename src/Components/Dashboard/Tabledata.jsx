@@ -29,60 +29,7 @@ const App = () => {
         createdAt: '2025-01-20',
         time: '10:00 AM',
       },
-      {
-        id: 4,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        partnerStatus: 'Active',
-        createdAt: '2025-01-20',
-        time: '10:00 AM',
-      },
-      {
-        id: 5,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        partnerStatus: 'Active',
-        createdAt: '2025-01-20',
-        time: '10:00 AM',
-      },
-      {
-        id: 6,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        partnerStatus: 'Active',
-        createdAt: '2025-01-20',
-        time: '10:00 AM',
-      },
-      {
-        id: 7,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        partnerStatus: 'Active',
-        createdAt: '2025-01-20',
-        time: '10:00 AM',
-      },
-      {
-        id: 8,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        partnerStatus: 'Active',
-        createdAt: '2025-01-20',
-        time: '10:00 AM',
-      },
-      {
-        id: 9,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        partnerStatus: 'Active',
-        createdAt: '2025-01-20',
-        time: '10:00 AM',
-      },
+     
   ]);
 
   const handleEdit = (id) => {
@@ -95,8 +42,8 @@ const App = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">User Table</h1>
+    <div className="p-4 ">
+      <h1 className="text-2xl font-bold mb-4">Latest Leads</h1>
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse border border-gray-300">
           <thead className="bg-gray-200">
