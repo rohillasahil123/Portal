@@ -56,7 +56,7 @@ const Userform = () => {
   }, [data]);
 
   return (
-    <div className="bg-gray-200 w-[83%] ml-64 ">
+    <div className="bg-gray-200 w-[100%]  ">
       <div className="flex justify-between">
         <div className="font -bold ml-3">
           <h1 className="text-3xl ">Welcome Guest</h1>

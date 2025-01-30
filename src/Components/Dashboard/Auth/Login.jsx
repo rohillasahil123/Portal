@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"
 import toast from "react-hot-toast";
-import { useNavigate} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import Cookies from "js-cookie"
 // import logo from "../../assets/logo.png"
 
@@ -89,6 +89,7 @@ const Login = ({ onAuthToggle }) => {
   
     setIsLoader(true); 
     try {
+      console.log(otp)
       const response = await axios.post(
         "http://localhost:3000/verify-otp",
         {
@@ -99,7 +100,8 @@ const Login = ({ onAuthToggle }) => {
           headers: { "Content-Type": "application/json" },
         }
       );
-  
+        console.log(response)
+     
       if (response.status === 200) {
         const { token, userId, message } = response.data;
         
@@ -117,7 +119,7 @@ const Login = ({ onAuthToggle }) => {
         console.log("User ID:", userId);
   
         toast.success(message || "OTP verified successfully!");
-        navigate("/");
+        navigate("/board");
       } else {
         toast.error(response.data.message || "Failed to verify OTP.");
       }
@@ -323,14 +325,20 @@ const Login = ({ onAuthToggle }) => {
               </div>
             </div>
             <button
-              className="h-11 rounded-md w-[87%] mt-7 ml-3 border bg-sky-600 text-white font-semibold hover:bg-sky-800"
+              className="h-11 rounded-md w-[90%] mt-7 ml-3 border bg-sky-600 text-white font-semibold hover:bg-sky-800"
               onClick={handleSendOtpClick}
             >
               LOGIN
             </button>
+            <div className="flex justify-around mt-2">
+<p className="text-md " >login as a <span className="text-blue-600 hover:cursor-pointer font-semibold"> <Link to="/loginPartner" >Partner</Link> </span>?</p>
+<p className="text-md " >login as a <span className="text-blue-600 hover:cursor-pointer font-semibold"><Link to="/loginInd" >Individual</Link> </span>?</p>
+      </div>
           </div>
+          
         )}
       </div>
+
     </>
   );
 };

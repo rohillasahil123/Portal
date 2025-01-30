@@ -63,8 +63,8 @@ const UploadCsv = ({ onUpload }) => {
   };
 
   return (
-    <div className="flex justify-center items-center ml-64 bg-gray-300 min-h-screen">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl">
+    <div className="flex justify-center items-center  bg-gray-300 min-h-screen">
+      <div className="bg-white p-8 rounded-lg shadow-lg  max-w-3xl">
 
         <div className="flex items-center justify-center mb-8">
           <img src={uploadImage} alt="Logo" className="h-[40%] w-[40%] mr-4" />

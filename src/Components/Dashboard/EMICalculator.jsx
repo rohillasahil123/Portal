@@ -77,7 +77,7 @@ const EMICalculator = () => {
   };
 
   return (
-    <div className="ml-64 mx-auto p-3 bg-white shadow-lg rounded-lg">
+    <div className=" mx-auto p-3 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4 text-center">EMI Calculator</h1>
 
       {/* Loan Details Form */}

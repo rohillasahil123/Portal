@@ -2,6 +2,36 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Eli = () => {
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post("https://credmantra.com/api/v1/auth/eli", {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        dob: formData.dob, 
+        employmentType: formData.employmentType,  
+        amount: formData.amount,  
+        income: formData.income,  
+        pincode: formData.pincode 
+      });
+      console.log(response)
+     toast.success("Checking eligibleity Please Wait few Sec")
+      navigate("/lenderlist")
+      setLoading(false);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error submitting form");
+      setLoading(false);
+    }
+  };
+
+
+
+
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,20 +45,16 @@ const Eli = () => {
 
   const navigate = useNavigate();
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className="h-[100vh] bg-gray-300 flex items-center justify-center ml-64 ">
-      <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-xl">
+    <div className="h-[98vh] bg-gray-300 flex items-center justify-center ">
+      <div className="w-[98%] max-w-2xl bg-white p-10 rounded-xl shadow-xl">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Check Eligibility</h1>
-        <form onSubmit={handleFormSubmit} className="space-y-6">
+        <form onSubmit={handleFormSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Full Name</label>

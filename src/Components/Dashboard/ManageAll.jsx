@@ -19,31 +19,24 @@ const PartnerTable = () => {
     { id: 14, username: 'MarkJohnson', type: 'Admin', partner: 'Partner3', status: 'Active', lastLogin: '2025-01-22' },
     { id: 15, username: 'MarkJohnson', type: 'Admin', partner: 'Partner3', status: 'Active', lastLogin: '2020-01-22' },
     { id: 16, username: 'MarkJohnson', type: 'Admin', partner: 'Partner3', status: 'Active', lastLogin: '2025-01-22' },
-    { id: 17, username: 'MarkJohnson', type: 'Admin', partner: 'Partner3', status: 'Active', lastLogin: '2020-01-22' },
-
-
-    { id: 3, username: 'MarkJohnson', type: 'Admin', partner: 'Partner3', status: 'Active', lastLogin: '2025-01-22' },
-
-    // Add more data as needed
+    { id: 17, username: 'MarkJohnson', type: 'Admin', partner: 'Partner3', status: 'Active', lastLogin: '2020-01-22' }
   ]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // Filter partners based on the search query
   const filteredPartners = partners.filter((partner) =>
     partner.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle delete action
+
   const handleDelete = (id) => {
     setPartners(partners.filter((partner) => partner.id !== id));
   };
 
-  // Handle edit action
+
   const handleEdit = (id) => {
     alert('Edit functionality is not implemented yet.');
-    // You can implement edit functionality here, like opening a modal or navigating to an edit page
   };
 
   return (

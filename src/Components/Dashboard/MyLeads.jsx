@@ -15,34 +15,33 @@ const MyLeads = () => {
 
   useEffect(() => {
     const uploaderId = Cookies.get("userId");
-
     if (!uploaderId) {
       setError("Uploader ID not found in cookies");
       setLoading(false);
       return;
     }
-
     const fetchLeads = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/get-leads-by-uploader-id`,
-          {
-            params: { uploaderId },
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+        const response = await axios.post(
+          "http://localhost:3000/get-leads-by-uploader-id",
+          { uploaderId },
+          { headers: { "Content-Type": "application/json" } }
         );
-        const updatedLeads = response.data.leads[0].leads.map((lead) => ({
+
+        const leadsData = response.data.leads;
+        console.log(leadsData , "tyu")
+
+        const updatedLeads = leadsData.map((lead) => ({
           ...lead,
-          pending: lead.pending.toString(),
+          pending: lead.pending ? lead.pending.toString() : "false",
         }));
+        console.log(response.data.leads)
         setLeads(updatedLeads);
         setFilteredLeads(updatedLeads);
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching leads:", err);
-        setError(err.message || "Failed to fetch leads");
+        setError(err.response?.data?.message || "Failed to fetch leads");
+      } finally {
         setLoading(false);
       }
     };
@@ -52,8 +51,8 @@ const MyLeads = () => {
 
   useEffect(() => {
     if (Array.isArray(leads)) {
-      const filtered = leads.filter((lead) => {
-        return Object.values(lead).some((value) => {
+      const filtered = leads.filter((lead) =>
+        Object.values(lead).some((value) => {
           if (value && typeof value === "string") {
             return value.toLowerCase().includes(searchTerm.toLowerCase());
           }
@@ -61,11 +60,14 @@ const MyLeads = () => {
             return value.toString().includes(searchTerm);
           }
           return false;
-        });
-      });
+        })
+      );
       setFilteredLeads(filtered);
     }
   }, [leads, searchTerm]);
+
+
+ 
 
   const handleDateSearch = () => {
     if (startDate && endDate) {
@@ -80,9 +82,11 @@ const MyLeads = () => {
   const indexOfLastLead = currentPage * leadsPerPage;
   const indexOfFirstLead = indexOfLastLead - leadsPerPage;
   const currentLeads = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
-  const isLeadsValid = Array.isArray(filteredLeads) && filteredLeads.length > 0;
+  const isLeadsValid = filteredLeads.length > 0;
 
   const downloadCSV = () => {
+    if (!isLeadsValid) return;
+    
     const headers = Object.keys(filteredLeads[0])
       .filter((key) => key !== "_id")
       .join(",");
@@ -102,68 +106,47 @@ const MyLeads = () => {
     a.href = url;
     a.download = "leads.csv";
     a.click();
-
     URL.revokeObjectURL(url);
   };
 
-  // Handle Next Page
-  const nextPage = () => {
-    if (currentPage < Math.ceil(filteredLeads.length / leadsPerPage)) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  // Handle Previous Page
-  const previousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  // Handle Leads per Page change
-  const handleLeadsPerPageChange = (e) => {
-    setLeadsPerPage(Number(e.target.value));
-    setCurrentPage(1);
+  const deleteLead = (index) => {
+    const updatedLeads = filteredLeads.filter((_, i) => i !== index);
+    setFilteredLeads(updatedLeads);
   };
 
   if (loading) return <p>Loading leads...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="overflow-x-auto w-[70%] mb-6 ml-64">
+    <div className="overflow-x-auto w-[98%] mb-6 ">
       <h2 className="text-2xl font-bold mb-4">My Leads</h2>
       <div className="flex justify-between sticky">
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search leads..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded px-4 py-2 w-full max-w-md"
-          />
-        </div>
-
-        <div className="mb-4">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            onClick={downloadCSV}
-            disabled={!isLeadsValid}
-          >
-            Download CSV
-          </button>
-        </div>
-
-        <div className="mb-4">
-          <select
-            value={leadsPerPage}
-            onChange={handleLeadsPerPageChange}
-            className="border border-gray-300 rounded px-4 py-2"
-          >
-            <option value={10}>10</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
+        <input
+          type="text"
+          placeholder="Search leads..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 rounded px-4 py-2 w-full max-w-md"
+        />
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          onClick={downloadCSV}
+          disabled={!isLeadsValid}
+        >
+          Download CSV
+        </button>
+        <select
+          value={leadsPerPage}
+          onChange={(e) => {
+            setLeadsPerPage(Number(e.target.value));
+            setCurrentPage(1);
+          }}
+          className="border border-gray-300 rounded px-4 py-2"
+        >
+          <option value={10}>10</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
       </div>
 
       <div className="flex mb-4">
@@ -198,43 +181,24 @@ const MyLeads = () => {
                 {Object.keys(filteredLeads[0])
                   .filter((key) => key !== "_id")
                   .map((key) => (
-                    <th
-                      key={key}
-                      className="px-4 py-2 border border-gray-300 bg-gray-100 text-left"
-                    >
+                    <th key={key} className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
                       {key}
                     </th>
                   ))}
-                <th className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
-                  Action
-                </th>
+                <th className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
               {currentLeads.map((lead, index) => (
                 <tr key={index}>
-                  <td className="px-4 py-2 border border-gray-300">
-                    {index + 1 + indexOfFirstLead}
-                  </td>
+                  <td className="px-4 py-2 border border-gray-300">{index + 1 + indexOfFirstLead}</td>
                   {Object.entries(lead)
                     .filter(([key]) => key !== "_id")
-                    .map(([key, value], idx) => (
-                      <td
-                        key={idx}
-                        className="px-4 py-2 border border-gray-300"
-                      >
-                        {value !== "N/A" ? value : null}
-                      </td>
+                    .map(([_, value], idx) => (
+                      <td key={idx} className="px-4 py-2 border border-gray-300">{value || "N/A"}</td>
                     ))}
                   <td className="px-4 py-2 border border-gray-300">
-                    <button
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                      onClick={() => {
-                        const updatedLeads = [...filteredLeads];
-                        updatedLeads.splice(index, 1);
-                        setFilteredLeads(updatedLeads);
-                      }}
-                    >
+                    <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => deleteLead(index)}>
                       Delete
                     </button>
                   </td>
@@ -242,33 +206,12 @@ const MyLeads = () => {
               ))}
             </tbody>
           </table>
-          <div className="flex justify-between mt-4">
-            <button
-              onClick={previousPage}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <span>
-              Page {currentPage} of{" "}
-              {Math.ceil(filteredLeads.length / leadsPerPage)}
-            </span>
-            <button
-              onClick={nextPage}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-              disabled={
-                currentPage === Math.ceil(filteredLeads.length / leadsPerPage)
-              }
-            >
-              Next
-            </button>
-          </div>
         </>
       ) : (
-        <p>No leads to display. Please upload a CSV file.</p>
+        <p>No leads to display.</p>
       )}
     </div>
   );
 };
+
 export default MyLeads;

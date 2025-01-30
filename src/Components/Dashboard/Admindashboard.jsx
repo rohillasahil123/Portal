@@ -4,6 +4,7 @@ import { SiReactivex } from "react-icons/si";
 import { FaHandshake } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import Tabledata from "./Tabledata";
+import { Link } from "react-router-dom";
 
 const Admindashboard = () => {
   return (
@@ -12,13 +13,15 @@ const Admindashboard = () => {
         <div className="text-3xl font-bold  text-blue-500">Admin DashBoard</div>
         <div className="flex space-x-2 item-center">
           <div className="border bg-sky-400 hover:bg-sky-700 hover:cursor-pointer h-[30px]  w-18   text-white rounded-md ">
-            Add Partner
+            <button> <Link to='/create_user' >Add Partner</Link></button>
           </div>
           <div className="border bg-green-400 h-[30px] hover:bg-green-700 hover:cursor-pointer w-18  text-white rounded-md ">
-            Add Manager
+            <button> <Link to='/create_manager' > Add Manager </Link>  </button>
+           
           </div>
           <div className="border bg-yellow-400 h-[30px] hover:bg-yellow-700 hover:cursor-pointer w-18 text-white rounded-md ">
-            Add Individual
+            <button> <Link to='/create_vis' >Add Individual</Link></button>
+           
           </div>
         </div>
       </div>
