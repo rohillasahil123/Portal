@@ -8,9 +8,14 @@ import { FaFile } from "react-icons/fa";
 import { IoMdCheckboxOutline } from "react-icons/io";
 import Tabledata from "./Tabledata";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const Userform = () => {
   const [data, setData] = useState("");
+  const [error , setError] = useState(null);
+  const [leads , setLeads] = useState(0)
+  
+  const [user , setUser] = useState(0)
 
   const PartnerData = [
     {
@@ -38,19 +43,44 @@ const Userform = () => {
     day: "numeric",
   });
 
+
   useEffect(() => {
-    const fetchData = async () => {
+    const uploaderId = Cookies.get("userId");
+    console.log(uploaderId, "1");
+    if (!uploaderId) {
+      setError("Uploader ID not found in cookies");
+      return;
+    }
+    const fetchLeads = async () => {
+     
       try {
-        const result = await axios.get("http://localhost:3000/api/total-count");
-        console.log(result.data.totalCount);
-        setData(result.data.totalCount);
+        const response = await axios.post(
+          "http://localhost:3000/get-leads-by-uploader-id",
+          { uploaderId },
+          { headers: { "Content-Type": "application/json" } }
+        );
+     
+         setLeads(response.data.totalLeads);
+         setUser(response.data.totalUsers);
+        const leadsData = response?.data?.leads || [];
+  
+        const updatedLeads = leadsData.map((lead) => ({
+          ...lead,
+          pending: lead.pending ? lead.pending.toString() : "false",
+        }));
+     
       } catch (err) {
-        console.error("Error fetching data:", err);
+        console.error("Error fetching leads:", err);
+        setError(
+          err?.response?.data?.message || "Failed to fetch leads. Please try again later."
+        );
       }
     };
+  
+    fetchLeads();
+  }, []); 
 
-    fetchData();
-  }, []);
+
   useEffect(() => {
     console.log("Updated data:", data);
   }, [data]);
@@ -75,7 +105,7 @@ const Userform = () => {
             <h1 className="text-lg ml-3 mt-2 text-gray-500 ">
               Total Leads
             </h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">{data}</h1>
+            <h1 className="font-bold ml-3 text-3xl">{leads}</h1>
           </div>
           <div className="  text-center mt-1 h-10 bg-blue-100 border items-center w-[14%] rounded-full mr-3">
             <MdGroups size={28} className="text-blue-500 ml-[10%]   mt-1" />
@@ -85,9 +115,9 @@ const Userform = () => {
           <div>
             {" "}
             <h1 className="text-lg ml-3 mt-2 text-gray-500  ">
-              Today Leads
+              Total User
             </h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
+            <h1 className="font-bold ml-3 text-3xl">{user}</h1>
           </div>
           <div className="  text-center mt-1 h-10 bg-green-100 border items-center w-[14%] rounded-full mr-3">
             <BsSendArrowUpFill

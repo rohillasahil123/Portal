@@ -198,7 +198,7 @@ const Login = ({ onAuthToggle }) => {
 
   return (
     <>
-     <div className="sm:ml-64 ml-[20%]">
+     <div className="">
         {isOnScreen ? (
           <>
             <div className="sm:h-[80vh] h-[51vh]  w-[35%] sm:w-[35%] ml-[30%] mt-[4%]   bg-white  shadow-lg relative  items-center">

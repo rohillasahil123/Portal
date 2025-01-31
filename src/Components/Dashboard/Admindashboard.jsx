@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const Admindashboard = () => {
   return (
-    <div className="ml-64 bg-gray-200 w-[83%] h-[90vh] ">
+    <div className="bg-gray-200 w-[100%] h-[90vh] ">
       <div className="h-[10vh] flex justify-between  w-[95%] items-center justify-self-center">
         <div className="text-3xl font-bold  text-blue-500">Admin DashBoard</div>
         <div className="flex space-x-2 item-center">

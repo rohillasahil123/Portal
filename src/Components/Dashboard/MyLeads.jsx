@@ -15,42 +15,48 @@ const MyLeads = () => {
 
   useEffect(() => {
     const uploaderId = Cookies.get("userId");
+    console.log(uploaderId, "1");
     if (!uploaderId) {
       setError("Uploader ID not found in cookies");
-      setLoading(false);
+      setLoading(false); 
       return;
     }
     const fetchLeads = async () => {
+      setLoading(true); 
       try {
         const response = await axios.post(
           "http://localhost:3000/get-leads-by-uploader-id",
           { uploaderId },
           { headers: { "Content-Type": "application/json" } }
         );
-
-        const leadsData = response.data.leads;
-        console.log(leadsData , "tyu")
-
+        console.log(response, "2");
+  
+        const leadsData = response?.data?.leads || [];
+        console.log(leadsData, "tyu");
+  
         const updatedLeads = leadsData.map((lead) => ({
           ...lead,
           pending: lead.pending ? lead.pending.toString() : "false",
         }));
-        console.log(response.data.leads)
+        console.log(updatedLeads);
+  
         setLeads(updatedLeads);
         setFilteredLeads(updatedLeads);
       } catch (err) {
         console.error("Error fetching leads:", err);
-        setError(err.response?.data?.message || "Failed to fetch leads");
+        setError(
+          err?.response?.data?.message || "Failed to fetch leads. Please try again later."
+        );
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchLeads();
-  }, []);
-
+  }, []); 
+  
   useEffect(() => {
-    if (Array.isArray(leads)) {
+    if (Array.isArray(leads) && searchTerm) {
       const filtered = leads.filter((lead) =>
         Object.values(lead).some((value) => {
           if (value && typeof value === "string") {
@@ -64,10 +70,7 @@ const MyLeads = () => {
       );
       setFilteredLeads(filtered);
     }
-  }, [leads, searchTerm]);
-
-
- 
+  }, [leads, searchTerm]); 
 
   const handleDateSearch = () => {
     if (startDate && endDate) {
@@ -88,13 +91,13 @@ const MyLeads = () => {
     if (!isLeadsValid) return;
     
     const headers = Object.keys(filteredLeads[0])
-      .filter((key) => key !== "_id")
+      .filter((key) => key !== "_id" && key !== "v account" && key !== "uploaderId")
       .join(",");
     const rows = filteredLeads
       .map((lead) =>
-        Object.values(lead)
-          .filter((_, idx) => Object.keys(lead)[idx] !== "_id")
-          .map((value) => `"${value}"`)
+        Object.entries(lead)
+          .filter(([key]) => key !== "_id" && key !== "v account" && key !== "uploaderId")
+          .map(([_, value]) => `"${value}"`)
           .join(",")
       )
       .join("\n");
@@ -179,7 +182,7 @@ const MyLeads = () => {
                   Index
                 </th>
                 {Object.keys(filteredLeads[0])
-                  .filter((key) => key !== "_id")
+                  .filter((key) => key !== "_id" && key !== "accounts" && key !== "uploaderId" && key !== "__v" )
                   .map((key) => (
                     <th key={key} className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
                       {key}
@@ -193,7 +196,7 @@ const MyLeads = () => {
                 <tr key={index}>
                   <td className="px-4 py-2 border border-gray-300">{index + 1 + indexOfFirstLead}</td>
                   {Object.entries(lead)
-                    .filter(([key]) => key !== "_id")
+                    .filter(([key]) => key !== "_id" && key !== "accounts" && key !== "uploaderId "  && key !== "__v" && key !== "uploaderId" )
                     .map(([_, value], idx) => (
                       <td key={idx} className="px-4 py-2 border border-gray-300">{value || "N/A"}</td>
                     ))}

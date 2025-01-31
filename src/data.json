@@ -1,0 +1,13 @@
+[
+    { "username": "JohnDoe", "type": "Partner", "assigned": "Partner1", "status": "Active", "lastLogin": "2025-01-20" },
+    { "username": "JaneSmith", "type": "Individual", "assigned": "Individual1", "status": "Inactive", "lastLogin": "2025-01-18" },
+    { "username": "MarkJohnson", "type": "Partner", "assigned": "Partner2", "status": "Active", "lastLogin": "2025-01-22" },
+    { "username": "EmilyClark", "type": "Individual", "assigned": "Individual2", "status": "Active", "lastLogin": "2025-01-24" },
+    { "username": "RobertBrown", "type": "Partner", "assigned": "Partner1", "status": "Inactive", "lastLogin": "2025-01-10" },
+    { "username": "SophiaWilson", "type": "Individual", "assigned": "Individual1", "status": "Active", "lastLogin": "2025-01-15" },
+    { "username": "DavidMartinez", "type": "Partner", "assigned": "Partner3", "status": "Active", "lastLogin": "2025-01-19" },
+    { "username": "OliviaGarcia", "type": "Individual", "assigned": "Individual2", "status": "Inactive", "lastLogin": "2025-01-05" },
+    { "username": "DanielHarris", "type": "Partner", "assigned": "Partner2", "status": "Active", "lastLogin": "2025-01-11" },
+    { "username": "IsabellaYoung", "type": "Individual", "assigned": "Individual1", "status": "Active", "lastLogin": "2025-01-21" }
+  ]
+  
