@@ -38,8 +38,6 @@ const MyLeads = () => {
           ...lead,
           pending: lead.pending ? lead.pending.toString() : "false",
         }));
-        console.log(updatedLeads);
-  
         setLeads(updatedLeads);
         setFilteredLeads(updatedLeads);
       } catch (err) {

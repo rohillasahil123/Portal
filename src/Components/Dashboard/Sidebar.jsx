@@ -27,7 +27,7 @@ const Dashboard = () => {
     },
     {
       path: "/individual",
-      label: "Individual Lead",
+      label: "Create Lead",
       showFor: ["admin", "Partner", "individual"],
     },
     {
@@ -46,13 +46,13 @@ const Dashboard = () => {
       showFor: ["admin", "Partner", "individual"],
     },
 
-    { path: "/uploadcsv", label: "Upload CSV", showFor: ["admin", "Partner"] }, // Individual can't see
-    { path: "/admin", label: "Admin Dashboard", showFor: ["admin"] }, // Only for Admin
+    { path: "/admin", label: "Admin Dashboard", showFor: ["admin"] },
+
     {
       path: "/manage/Partner",
       label: "Manage All Partners",
       showFor: ["admin"],
-    }, // Only for Admin
+    },
     { path: "/profile", label: "Profile", showFor: ["admin", "individual"] }, // Partner can't see
   ];
 

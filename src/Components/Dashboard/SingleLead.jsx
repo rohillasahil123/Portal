@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const LeadForm = () => {
   const [formData, setFormData] = useState({
@@ -10,19 +13,50 @@ const LeadForm = () => {
     age: "",
     gender: "",
   });
+  const [userrole , setUserrole] = useState(null)
+  const [user, setUser] = useState(null);
+
+  useEffect(()=>{
+    const getrole = Cookies.get("role")
+    const uploaderId = Cookies.get("userId")
+    setUser(uploaderId)
+    setUserrole(getrole)
+    console.log(user)
+  },[])
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
+    const response = await axios.post("http://localhost:3000/singleUserLead",{
+      uploaderId:user,
+      name: formData.name,
+      email: formData.email,
+      pincode: formData.pincode,
+      dob: formData.dob,
+      salary: formData.salary,
+      age: formData.age,
+      gender: formData.gender,
+    })
+      console.log(response , "454")
+
     alert(JSON.stringify(formData, null, 2));
   };
 
   return (
-    <div className="h-[80vh] flex  items-center justify-center bg-gray-50">
+    <>
+    <div className="h-[100vh] flex  items-center justify-center bg-gray-50 relative">
+      {
+        userrole === "admin" || userrole === "Partner" &&(
+          <div className="flex justify-around w-[9%] h-8 bg-gray-50 absolute ml-[84%] mb-[55%]">
+          <div className="border w-[50%] h-full bg-green-500 text-white font-semibold text-center rounded-md hover:cursor-pointer hover:bg-green-600">Single</div>
+          <div className="border w-[50%] h-full bg-sky-500 text-white font-semibold text-center rounded-md hover:cursor-pointer hover:bg-sky-600" ><Link to='/uploadcsv'> Bulk </Link></div>
+        </div>
+          )}
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-3xl">
         <h2 className="text-3xl font-semibold text-gray-800 text-center mb-6">Single Lead Form</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -115,7 +149,7 @@ const LeadForm = () => {
           </div>
 
           
-          <div className="mb-6 col-span-2">
+          <div className="mb-6 col-span-2 w-[90%]">
             <label className="block text-gray-700 font-semibold mb-2">Gender</label>
             <div className="flex space-x-6">
               <div>
@@ -142,7 +176,7 @@ const LeadForm = () => {
                 />
                 <label htmlFor="female" className="ml-2">Female</label>
               </div>
-              <div>
+              <div className=" ">
                 <input
                   type="radio"
                   id="other"
@@ -168,6 +202,7 @@ const LeadForm = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

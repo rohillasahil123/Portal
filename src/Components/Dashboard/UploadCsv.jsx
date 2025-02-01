@@ -3,6 +3,7 @@ import Papa from "papaparse";
 import axios from "axios";
 import uploadImage from "../../assets/UploadCsv.png";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 const UploadCsv = ({ onUpload }) => {
   const [file, setFile] = useState(null);
@@ -64,6 +65,10 @@ const UploadCsv = ({ onUpload }) => {
 
   return (
     <div className="flex justify-center items-center  bg-gray-300 min-h-screen">
+      <div className="flex justify-around w-[6%] h-8 bg-gray-50 absolute ml-[70%] mb-[43%]">
+          <div className="border w-full h-full bg-green-500 text-white font-semibold text-center rounded-md hover:cursor-pointer hover:bg-green-600"> <Link to="/individual">Single</Link></div>
+          
+        </div>
       <div className="bg-white p-8 rounded-lg shadow-lg  max-w-3xl">
 
         <div className="flex items-center justify-center mb-8">
