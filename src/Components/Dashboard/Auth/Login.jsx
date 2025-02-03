@@ -198,10 +198,10 @@ const Login = ({ onAuthToggle }) => {
 
   return (
     <>
-     <div className="">
+     <div className="justify-center flex">
         {isOnScreen ? (
           <>
-            <div className="sm:h-[80vh] h-[51vh]  w-[35%] sm:w-[35%] ml-[30%] mt-[4%]   bg-white  shadow-lg relative  items-center">
+        <div className="sm:h-[80vh] h-[48vh]  w-[63%] sm:w-[35%] border ml-0 sm:ml-[30%] mt-[4%]  bg-white  shadow-lg  items-center">
             <div className="h-[12%] flex justify-around">
               <h1 className="font-bold text-xl mt-5" >CM Partner Portel</h1>
               </div>
@@ -260,7 +260,7 @@ const Login = ({ onAuthToggle }) => {
             </div>
           </>
         ) : (
-          <div className="sm:h-[80vh] h-[48vh] w-[63%] sm:w-[35%] border ml-[30%] mt-[4%]  bg-white  shadow-lg  items-center">
+          <div className="sm:h-[80vh] h-[48vh]  w-[63%] sm:w-[35%] border ml-0 sm:ml-[30%] mt-[4%]  bg-white  shadow-lg  items-center">
               <div className="h-[12%] text-center ">
               <h1 className="font-bold text-xl mt-5" >CM Partner Portel</h1>
               </div>

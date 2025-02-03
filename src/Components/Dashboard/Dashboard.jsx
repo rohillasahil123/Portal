@@ -51,7 +51,7 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div
-          className={`flex-1 p-6 ${
+          className={`flex-1 p-6 justify-center ${
             isLoggedIn ? "bg-gray-50" : "bg-white"
           } min-h-screen`}
         >
