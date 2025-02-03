@@ -45,13 +45,13 @@ const Dashboard = () => {
 
   return (
     <Router>
-      <div className="flex">
+      <div className="flex bg-gradient-to-br from-blue-100 to-indigo-200">
         {/* {isLoggedIn && <Sidebar isLoggedIn={isLoggedIn} onAuthToggle={handleAuthToggle} />} */}
         <Sidebar />
 
         {/* Main Content */}
         <div
-          className={`flex-1 p-6 justify-center ${
+          className={`flex-1  justify-center ${
             isLoggedIn ? "bg-gray-50" : "bg-white"
           } min-h-screen`}
         >

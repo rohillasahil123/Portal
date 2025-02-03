@@ -29,7 +29,7 @@ const CreateInd = () => {
 
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
+    <div className="flex justify-center  w-full items-center min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
       <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-md">
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">Create  Individual</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

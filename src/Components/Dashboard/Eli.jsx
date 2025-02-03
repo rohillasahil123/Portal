@@ -51,7 +51,7 @@ const Eli = () => {
   };
 
   return (
-    <div className="h-[98vh] bg-gray-300 flex items-center justify-center ">
+    <div className="h-[100vh] bg-gray-300 flex items-center justify-center ">
       <div className="w-[98%] max-w-2xl bg-white p-10 rounded-xl shadow-xl">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Check Eligibility</h1>
         <form onSubmit={handleFormSubmit} className="space-y-4">

@@ -98,7 +98,7 @@ const Userform = () => {
         </div>
       </div>
 
-      <div className="flex h-[11vh] w-full space-x-2 mt-2 ">
+      <div className="flex h-[11vh] w-full space-x-2 mt-2 flex-col-2 ">
         <div className="h-[100%] border ml-3 shadow-lg bg-white w-[24%] rounded-md flex justify-between items-center ">
           <div>
             {" "}

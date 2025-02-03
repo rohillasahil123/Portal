@@ -197,149 +197,153 @@ const Login = ({ onAuthToggle }) => {
   // };
 
   return (
-    <>
-     <div className="justify-center flex">
-        {isOnScreen ? (
-          <>
-        <div className="sm:h-[80vh] h-[48vh]  w-[63%] sm:w-[35%] border ml-0 sm:ml-[30%] mt-[4%]  bg-white  shadow-lg  items-center">
-            <div className="h-[12%] flex justify-around">
-              <h1 className="font-bold text-xl mt-5" >CM Partner Portel</h1>
-              </div>
-              <div className="h-[60%] w-full mt-[32%]">
-                <div className="text-center ">
-                  <h4 className="font-bold text-sky-600 text-lg">WELCOME</h4>
-                  <h6 className="font-medium text-xs md:text-sm">
-                    AUTHORIZATION IS REQUIRED TO YOU <br /> TO GET IN.
-                  </h6>
-                </div>
-                <div className="flex justify-center mt-4 space-x-3">
-                  {otp.map((value, index) => (
-                    <input
-                      key={index}
-                      id={`otp-input-${index}`}
-                      type="text"
-                      className="h-12 w-10 border text-center text-xl  font-bold rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      onChange={(e) => handelChange(e, index)}
-                      onKeyDown={(e) => handelKeyDown(e, index)}
-                      maxLength={1}
-                      value={value}
-                    />
-                  ))}
-                </div>
-                <div className="text-center mt-5">
-                  {isCountdownComplete && !isOtpFilled ? (
-                    <button
-                      className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full"
-                      onClick={handleResendOtp}
-                    >
-                      Resend OTP
-                    </button>
-                  ) : (
-                    <button
-                      className={`${
-                        isOtpFilled
-                          ? "bg-green-600 hover:bg-green-800"
-                          : "bg-gray-400 cursor-not-allowed"
-                      } text-white font-bold py-2 px-4 rounded-full`}
-                      onClick={handleVerifyOtp}
-                      disabled={!isOtpFilled}
-                    >
-                      Submit
-                    </button>
-                  )}
-                  {countdown > 0 && (
-                    <p className="text-sm mt-3 text-gray-500">{`Resend your OTP in ${countdown}s`}</p>
-                  )}
-                  <p className="text-xs text-gray-400 mt-4">
-                    {retryCount < 5
-                      ? `You have ${5 - retryCount} OTP resend attempts left.`
-                      : "You have exceeded the maximum OTP resend attempts."}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="sm:h-[80vh] h-[48vh]  w-[63%] sm:w-[35%] border ml-0 sm:ml-[30%] mt-[4%]  bg-white  shadow-lg  items-center">
-              <div className="h-[12%] text-center ">
-              <h1 className="font-bold text-xl mt-5" >CM Partner Portel</h1>
-              </div>
-            <div className="mt-3 text-center ">
-              <h1 className="text-4xl font-bold ">LOGIN</h1>
-            </div>
-
-            <div className=" mt-5">
-              <div className="ml-3">
-                <p className="text-[14px]">Email Address</p>
-                <input
-                  type="text"
-                  placeholder="Enter your email"
-                  className={`h-11 p-2 border w-[90%] rounded shadow ${error.email ? "border-red-500" : "border-gray-300"}`}
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-                {
-                  error.email && (<p className="text-red-500">{error.email}</p>)
-                }
-              </div>
-              <div className="flex ml-3 mt-3">
-                <div className=" ">
-                  <p className="text-[14px]">Username</p>
-                  <input
-                    type="text"
-                    placeholder="Username"
-                    required
-                    className="h-11 p-2 border w-[97%] rounded shadow"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="">
-                  <p className="text-[14px]">Phone</p>
-                  <input
-                    type="tel"
-                    maxLength={10}
-                    required
-                    placeholder="mobileNumber"
-                    className="h-11 p-2 border w-[97%] rounded shadow"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="ml-3 mt-3">
-                <p className="text-[14px]">Password</p>
-                <input
-                  type="text"
-                  placeholder="Enter your Password"
-                  required
-                  className="h-11 p-2 border w-[90%] rounded shadow"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-            <button
-              className="h-11 rounded-md w-[90%] mt-7 ml-3 border bg-sky-600 text-white font-semibold hover:bg-sky-800"
-              onClick={handleSendOtpClick}
-            >
-              LOGIN
-            </button>
-            <div className="flex justify-around mt-2">
-<p className="text-md " >login as a <span className="text-blue-600 hover:cursor-pointer font-semibold"> <Link to="/loginPartner" >Partner</Link> </span>?</p>
-<p className="text-md " >login as a <span className="text-blue-600 hover:cursor-pointer font-semibold"><Link to="/loginInd" >Individual</Link> </span>?</p>
-      </div>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      {isOnScreen ? (
+        <div className="w-[95%] sm:w-[60%] md:w-[40%] lg:w-[30%] bg-white shadow-lg rounded-lg p-6">
+          <div className="text-center">
+            <h1 className="font-bold text-xl sm:text-2xl">CM Partner Portal</h1>
           </div>
-          
-        )}
-      </div>
-
-    </>
+          <div className="mt-10 text-center">
+            <h4 className="font-bold text-sky-600 text-lg">WELCOME</h4>
+            <h6 className="font-medium text-sm">
+              AUTHORIZATION IS REQUIRED TO YOU <br /> TO GET IN.
+            </h6>
+          </div>
+          <div className="flex justify-center mt-6 space-x-3">
+            {otp.map((value, index) => (
+              <input
+                key={index}
+                type="text"
+                className="h-12 w-10 border text-center text-xl font-bold rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => handelChange(e, index)}
+                onKeyDown={(e) => handelKeyDown(e, index)}
+                maxLength={1}
+                value={value}
+              />
+            ))}
+          </div>
+          <div className="text-center mt-5">
+            {isCountdownComplete && !isOtpFilled ? (
+              <button
+                className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full"
+                onClick={handleResendOtp}
+              >
+                Resend OTP
+              </button>
+            ) : (
+              <button
+                className={`${
+                  isOtpFilled
+                    ? "bg-green-600 hover:bg-green-800"
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-white font-bold py-2 px-4 rounded-full`}
+                onClick={handleVerifyOtp}
+                disabled={!isOtpFilled}
+              >
+                Submit
+              </button>
+            )}
+            {countdown > 0 && (
+              <p className="text-sm mt-3 text-gray-500">
+                Resend your OTP in {countdown}s
+              </p>
+            )}
+            <p className="text-xs text-gray-400 mt-4">
+              {retryCount < 5
+                ? `You have ${5 - retryCount} OTP resend attempts left.`
+                : "You have exceeded the maximum OTP resend attempts."}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="w-[95%] sm:w-[70%] md:w-[50%] lg:w-[40%] bg-white shadow-lg rounded-lg p-6">
+          <div className="text-center">
+            <h1 className="font-bold text-xl sm:text-2xl">CM Partner Portal</h1>
+          </div>
+          <div className="mt-5 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold">LOGIN</h1>
+          </div>
+          <div className="mt-5">
+            <div className="mb-4">
+              <p className="text-sm font-medium">Email Address</p>
+              <input
+                type="text"
+                placeholder="Enter your email"
+                className={`h-11 p-2 border w-full rounded shadow ${
+                  error.email ? "border-red-500" : "border-gray-300"
+                }`}
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleInputChange}
+              />
+              {error.email && <p className="text-red-500">{error.email}</p>}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <p className="text-sm font-medium">Username</p>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  required
+                  className="h-11 p-2 border w-full rounded shadow"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Phone</p>
+                <input
+                  type="tel"
+                  maxLength={10}
+                  required
+                  placeholder="Mobile Number"
+                  className="h-11 p-2 border w-full rounded shadow"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-sm font-medium">Password</p>
+              <input
+                type="password"
+                placeholder="Enter your Password"
+                required
+                className="h-11 p-2 border w-full rounded shadow"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+          <button
+            className="h-11 rounded-md w-full mt-6 bg-sky-600 text-white font-semibold hover:bg-sky-800"
+            onClick={handleSendOtpClick}
+          >
+            LOGIN
+          </button>
+          <div className="flex justify-between mt-3 text-sm">
+            <p>
+              Login as a{" "}
+              <span className="text-blue-600 hover:underline">
+                <Link to="/loginPartner">Partner</Link>
+              </span>
+              ?
+            </p>
+            <p>
+              Login as a{" "}
+              <span className="text-blue-600 hover:underline">
+                <Link to="/loginInd">Individual</Link>
+              </span>
+              ?
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
