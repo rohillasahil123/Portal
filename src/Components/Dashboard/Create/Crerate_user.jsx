@@ -28,7 +28,7 @@ const CreatePartner = () => {
       toast.success("Partner Created Successfully!");
     }
      console.log("Form Data:", formData);
-    setFormData({ name: "", email: "", password: "" }); // Clear form
+    setFormData({ name: "", email: "", password: "" });
   };
 
   return (

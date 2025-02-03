@@ -3,7 +3,7 @@ import axios from "axios"
 import toast from "react-hot-toast";
 import { Link, useNavigate} from "react-router-dom";
 import Cookies from "js-cookie"
-// import logo from "../../assets/logo.png"
+
 
 const Login = ({ onAuthToggle }) => {
   const [isOnScreen, setIsOnScreen] = useState(false);
@@ -329,14 +329,14 @@ const Login = ({ onAuthToggle }) => {
             <p>
               Login as a{" "}
               <span className="text-blue-600 hover:underline">
-                <Link to="/loginPartner">Partner</Link>
+                <Link to="loginPartner">Partner</Link>
               </span>
               ?
             </p>
             <p>
               Login as a{" "}
               <span className="text-blue-600 hover:underline">
-                <Link to="/loginInd">Individual</Link>
+                <Link to="loginInd">Individual</Link>
               </span>
               ?
             </p>

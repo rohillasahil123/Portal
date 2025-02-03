@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const LoginUserPage = () => {
@@ -18,7 +19,7 @@ const LoginUserPage = () => {
   };
 
   return (
-    <div className="h-[100vh] ml-64 flex items-center justify-center bg-gray-50">
+    <div className="h-[100vh]  flex items-center justify-center bg-gray-50">
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
         <h2 className="text-3xl font-semibold text-gray-800 text-center mb-6">
         User Login
@@ -65,6 +66,9 @@ const LoginUserPage = () => {
           >
             Login
           </button>
+          <div>
+            <p className="text-md text-gray-500 text-center mt-2">If you are not Partner so Login <span className="text-blue-600 font-semibold hover:cursor-pointer"> <Link to='/loginPartner'>Partner</Link></span></p>
+          </div>
         </form>
       </div>
     </div>

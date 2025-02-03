@@ -18,9 +18,11 @@ const Dashboard = () => {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
-      navigate("/"); // Redirect to login if not logged in
+      if (location.pathname !== "/loginInd" && location.pathname !== "/loginPartner") {
+        navigate("/");
+      }
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   const handleLogout = () => {
     Cookies.remove("userToken");
@@ -40,7 +42,7 @@ const Dashboard = () => {
     { path: "/profile", label: "Profile", showFor: ["admin", "individual"] }, 
   ];
 
-  if (!isLoggedIn) return null; // **Hides the sidebar if not logged in**
+  if (!isLoggedIn) return null
 
   return (
     <div className="" >

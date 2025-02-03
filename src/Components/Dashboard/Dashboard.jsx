@@ -26,7 +26,6 @@ import { Toaster } from "react-hot-toast";
 
 const Dashboard = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const [leads, setLeads] = useState([]);
 
   const handleUpload = (data) => {
@@ -49,7 +48,6 @@ const Dashboard = () => {
         {/* {isLoggedIn && <Sidebar isLoggedIn={isLoggedIn} onAuthToggle={handleAuthToggle} />} */}
         <Sidebar />
 
-        {/* Main Content */}
         <div
           className={`flex-1  justify-center ${
             isLoggedIn ? "bg-gray-50" : "bg-white"
@@ -67,7 +65,6 @@ const Dashboard = () => {
             <Route path="/EmiCalculator" element={<EMICalculator />} />
             <Route path="/eli" element={<Eligibility />} />
             <Route path="/loginInd" element={<LoginUserPage />} />
-
             <Route path="/loginPartner" element={  <LoginPartner/>} />
             <Route path="/create_user" element={<CreatePartner />} />
             <Route path="/create_vis" element={<CreateInd />} />
