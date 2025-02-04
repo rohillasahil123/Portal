@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 const CreatePartner = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,13 @@ const CreatePartner = () => {
     email: "",
     password: "",
   });
+  const [userId , setUserId] = useState("");
+
+  useEffect(()=>{
+    const uploaderId = Cookies.get("userId") 
+    setUserId(uploaderId)
+  })
+
 
   const navigate = useNavigate()
 
@@ -18,11 +26,14 @@ const CreatePartner = () => {
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-    const response =await axios.post("http://localhost:3000/partner",{
+    const response =await axios.post("http://localhost:3000/admin/create-partner",{
       name: formData.name,
       email: formData.email,
       password: formData.password,
+      desinationType:"Partner",
+      uploaderId :userId
     })
+    console.log(response)
     if(response.status === 201){
       navigate("/admin")
       toast.success("Partner Created Successfully!");

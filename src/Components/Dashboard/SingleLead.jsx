@@ -13,196 +13,110 @@ const LeadForm = () => {
     age: "",
     gender: "",
   });
-  const [userrole , setUserrole] = useState(null)
+  const [userrole, setUserrole] = useState(null);
   const [user, setUser] = useState(null);
 
-  useEffect(()=>{
-    const getrole = Cookies.get("role")
-    const uploaderId = Cookies.get("userId")
-    setUser(uploaderId)
-    setUserrole(getrole)
-    console.log(user)
-  },[])
-
+  useEffect(() => {
+    const getrole = Cookies.get("role");
+    const uploaderId = Cookies.get("userId");
+    setUser(uploaderId);
+    setUserrole(getrole);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post("http://localhost:3000/singleUserLead",{
-      uploaderId:user,
-      name: formData.name,
-      email: formData.email,
-      pincode: formData.pincode,
-      dob: formData.dob,
-      salary: formData.salary,
-      age: formData.age,
-      gender: formData.gender,
-    })
-      console.log(response , "454")
-
+    const response = await axios.post("http://localhost:3000/singleUserLead", {
+      uploaderId: user,
+      ...formData,
+    });
+    console.log(response, "Response");
     alert(JSON.stringify(formData, null, 2));
   };
 
   return (
-    <>
-    <div className="h-[100vh] flex  items-center justify-center bg-gray-50 relative">
-      {
-        userrole === "admin" || userrole === "Partner" &&(
-          <div className="flex justify-around w-[9%] h-8 bg-gray-50 absolute ml-[84%] mb-[55%]">
-          <div className="border w-[50%] h-full bg-green-500 text-white font-semibold text-center rounded-md hover:cursor-pointer hover:bg-green-600">Single</div>
-          <div className="border w-[50%] h-full bg-sky-500 text-white font-semibold text-center rounded-md hover:cursor-pointer hover:bg-sky-600" ><Link to='/uploadcsv'> Bulk </Link></div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+      {userrole === "admin" || userrole === "DSA" ? (
+        <div className="flex space-x-2 absolute top-4 right-6">
+          <div className="sm:px-4 sm:py-2 py-1 h-7 sm:h-9 w-12 sm:w-16 bg-green-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-green-600">
+           <h6 className="text-sm text-center">Single</h6>
+          </div>
+          <Link
+            to="/uploadcsv"
+            className="sm:px-4 sm:py-2 py-1 h-7 sm:h-9 w-12 sm:w-16 bg-sky-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-sky-600"
+          >
+           <h6 className="text-sm text-center">Bulk</h6>
+          </Link>
         </div>
-          )}
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-3xl">
-        <h2 className="text-3xl font-semibold text-gray-800 text-center mb-6">Single Lead Form</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div className="mb-6">
-            <label htmlFor="name" className="block text-gray-700 font-semibold mb-2">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-              required
-            />
-          </div>
+      ) : null}
 
-          
-          <div className="mb-6">
-            <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-              required
-            />
-          </div>
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">
+          Single Lead Form
+        </h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[
+            { label: "Name", type: "text", id: "name" },
+            { label: "Email", type: "email", id: "email" },
+            { label: "Pincode", type: "text", id: "pincode" },
+            { label: "Date of Birth", type: "date", id: "dob" },
+            { label: "Salary", type: "number", id: "salary" },
+            { label: "Age", type: "number", id: "age" },
+          ].map(({ label, type, id }) => (
+            <div key={id}>
+              <label htmlFor={id} className="block text-gray-700 font-semibold mb-1">
+                {label}
+              </label>
+              <input
+                type={type}
+                id={id}
+                name={id}
+                value={formData[id]}
+                onChange={handleChange}
+                placeholder={`Enter ${label.toLowerCase()}`}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
+          ))}
 
-          
-          <div className="mb-6">
-            <label htmlFor="pincode" className="block text-gray-700 font-semibold mb-2">Pincode</label>
-            <input
-              type="text"
-              id="pincode"
-              name="pincode"
-              value={formData.pincode}
-              onChange={handleChange}
-              placeholder="Enter your pincode"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-              required
-            />
-          </div>
-
-          
-          <div className="mb-6">
-            <label htmlFor="dob" className="block text-gray-700 font-semibold mb-2">Date of Birth</label>
-            <input
-              type="date"
-              id="dob"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-              required
-            />
-          </div>
-
-          
-          <div className="mb-3  ">
-            <label htmlFor="salary" className="block text-gray-700 font-semibold mb-2">Salary</label>
-            <input
-              type="number"
-              id="salary"
-              name="salary"
-              value={formData.salary}
-              onChange={handleChange}
-              placeholder="Enter your salary"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-              required
-            />
-          </div>
-
-          
-          <div className="mb-6">
-            <label htmlFor="age" className="block text-gray-700 font-semibold mb-2">Age</label>
-            <input
-              type="number"
-              id="age"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              placeholder="Enter your age"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-              required
-            />
-          </div>
-
-          
-          <div className="mb-6 col-span-2 w-[90%]">
-            <label className="block text-gray-700 font-semibold mb-2">Gender</label>
-            <div className="flex space-x-6">
-              <div>
-                <input
-                  type="radio"
-                  id="male"
-                  name="gender"
-                  value="Male"
-                  onChange={handleChange}
-                  checked={formData.gender === "Male"}
-                  className="h-4 w-4 text-blue-500"
-                />
-                <label htmlFor="male" className="ml-2">Male</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  id="female"
-                  name="gender"
-                  value="Female"
-                  onChange={handleChange}
-                  checked={formData.gender === "Female"}
-                  className="h-4 w-4 text-pink-500"
-                />
-                <label htmlFor="female" className="ml-2">Female</label>
-              </div>
-              <div className=" ">
-                <input
-                  type="radio"
-                  id="other"
-                  name="gender"
-                  value="Other"
-                  onChange={handleChange}
-                  checked={formData.gender === "Other"}
-                  className="h-4 w-4 text-purple-500"
-                />
-                <label htmlFor="other" className="ml-2">Other</label>
-              </div>
+          <div className="md:col-span-2">
+            <label className="block text-gray-700 font-semibold mb-1">Gender</label>
+            <div className="flex space-x-4">
+              {["Male", "Female", "Other"].map((gender) => (
+                <div key={gender} className="flex items-center">
+                  <input
+                    type="radio"
+                    id={gender.toLowerCase()}
+                    name="gender"
+                    value={gender}
+                    onChange={handleChange}
+                    checked={formData.gender === gender}
+                    className="h-4 w-4 text-blue-500"
+                  />
+                  <label htmlFor={gender.toLowerCase()} className="ml-2">
+                    {gender}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
 
-    
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300 transform hover:scale-105"
-          >
-            Submit Form
-          </button>
-    
+          <div className="md:col-span-2">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 transition duration-300"
+            >
+              Submit Form
+            </button>
+          </div>
         </form>
       </div>
     </div>
-    </>
   );
 };
 

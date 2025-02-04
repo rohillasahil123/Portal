@@ -32,11 +32,11 @@ const Dashboard = () => {
   };
 
   const menuItems = [
-    { path: "/board", label: "Board", showFor: ["admin", "Partner", "individual"] },
-    { path: "/individual", label: "Create Lead", showFor: ["admin", "Partner", "individual"] },
-    { path: "/eli", label: "Eligibility Checker", showFor: ["admin", "Partner", "individual"] },
-    { path: "/EmiCalculator", label: "EMI Calculator", showFor: ["admin", "Partner", "individual"] },
-    { path: "/myleads", label: "My Leads", showFor: ["admin", "Partner", "individual"] },
+    { path: "/board", label: "Board", showFor: ["admin", "DSA", "individual"] },
+    { path: "/individual", label: "Create Lead", showFor: ["admin", "DSA", "individual"] },
+    { path: "/eli", label: "Eligibility Checker", showFor: ["admin", "DSA", "individual"] },
+    { path: "/EmiCalculator", label: "EMI Calculator", showFor: ["admin", "DSA", "individual"] },
+    { path: "/myleads", label: "My Leads", showFor: ["admin", "individual", "DSA"] },
     { path: "/admin", label: "Admin Dashboard", showFor: ["admin"] },
     { path: "/manage/Partner", label: "Manage All Partners", showFor: ["admin"] },
     { path: "/profile", label: "Profile", showFor: ["admin", "individual"] }, 

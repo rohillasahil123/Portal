@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios"
+import Cookies from "js-cookie"
+import { useNavigate } from "react-router-dom";
 
 const CreateInd = () => {
   const [formData, setFormData] = useState({
@@ -8,25 +10,37 @@ const CreateInd = () => {
     email: "",
     password: "",
   });
+   const [userId , setUserId] = useState("");
+  
+  const navigate =  useNavigate()
 
+
+    useEffect(()=>{
+      const uploaderId = Cookies.get("userId") 
+      setUserId(uploaderId)
+    })
+  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-    const response =await axios.post("http://localhost:3000/individual",{
+    const response =await axios.post("http://localhost:3000/admin/create-partner",{
       name: formData.name,
       email: formData.email,
       password: formData.password,
+      desinationType:"individual",
+      uploaderId :userId
     })
+    console.log(response)
     if(response.status === 201){
-      toast.success("Individual User  Created Successfully!");
+      navigate("/admin")
+      toast.success("Partner Created Successfully!");
     }
      console.log("Form Data:", formData);
-    setFormData({ name: "", email: "", password: "" }); 
+    setFormData({ name: "", email: "", password: "" });
   };
-
 
   return (
     <div className="flex justify-center  w-full items-center min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">

@@ -121,13 +121,13 @@ const EMICalculator = () => {
         Calculate EMI
       </button>
 
-      <div className="mt-1 text-center">
+      <div className="mt-1 ] text-center">
         <h2 className="text-xl font-semibold">Your EMI: ₹{emi}</h2>
       </div>
             {/* Show Chart */}
       {amortizationData.length > 0 && (
         
-        <div className="w-[65%]">
+        <div className="sm:w-[65%] w-[100%]">
           <Line data={chartData} />
         </div>
       )}

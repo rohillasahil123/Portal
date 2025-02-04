@@ -65,14 +65,15 @@ const UploadCsv = ({ onUpload }) => {
 
   return (
     <div className="flex justify-center items-center  bg-gray-300 min-h-screen">
-      <div className="flex justify-around w-[6%] h-8 bg-gray-50 absolute ml-[70%] mb-[43%]">
-          <div className="border w-full h-full bg-green-500 text-white font-semibold text-center rounded-md hover:cursor-pointer hover:bg-green-600"> <Link to="/individual">Single</Link></div>
-          
-        </div>
-      <div className="bg-white p-8 rounded-lg shadow-lg  max-w-3xl">
+ 
+      <div className="bg-white p-5 rounded-lg shadow-lg  max-w-3xl">
 
+      <div className="sm:px-4   sm:py-2 px-1 py-1  h-7 sm:h-9 w-12 sm:w-16 bg-green-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-green-600">
+      <Link to="/individual"><h6 className="text-sm text-center">Single</h6> </Link>
+          </div>
+          
         <div className="flex items-center justify-center mb-8">
-          <img src={uploadImage} alt="Logo" className="h-[40%] w-[40%] mr-4" />
+          <img src={uploadImage} alt="Logo" className="sm:h-[40%] sm:w-[40%] h-[62%] w-[62%] mr-4" />
         </div>
 
         <div className="mb-6">
