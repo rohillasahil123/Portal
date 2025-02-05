@@ -34,7 +34,8 @@ const PartnerTable = () => {
   );
 
   return (
-    <div className="container mx-auto p-4 w-[100%]">
+    <div className="container mx-auto py-3  w-[96%]">
+      <h1 className="font-semibold sm:font-bold text-xl sm:text-2xl text-center">All User Data</h1>
       {/* Search and Select Dropdown */}
       <div className="mb-4 flex justify-between items-center">
         <input

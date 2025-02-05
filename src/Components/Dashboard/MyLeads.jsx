@@ -32,7 +32,7 @@ const MyLeads = () => {
         console.log(response, "2");
   
         const leadsData = response?.data?.leads || [];
-        console.log(leadsData, "tyu");
+        console.log(leadsData, "tyu1");
   
         const updatedLeads = leadsData.map((lead) => ({
           ...lead,
@@ -119,18 +119,18 @@ const MyLeads = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="overflow-x-auto w-[98%] mb-6 ">
+    <div className="w-full p-4">
       <h2 className="text-2xl font-bold mb-4">My Leads</h2>
-      <div className="flex justify-between sticky">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <input
           type="text"
           placeholder="Search leads..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 w-full max-w-md"
+          className="border border-gray-300 rounded px-4 py-2 w-[90%] md:max-w-md"
         />
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
           onClick={downloadCSV}
           disabled={!isLeadsValid}
         >
@@ -150,18 +150,18 @@ const MyLeads = () => {
         </select>
       </div>
 
-      <div className="flex mb-4">
+      <div className="flex sm:flex-row gap-2 mb-4">
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 mr-2"
+          className="border border-gray-300 rounded px-4 py-2 w-full sm:w-auto"
         />
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 mr-2"
+          className="border border-gray-300 rounded px-4 py-2 w-full sm:w-auto"
         />
         <button
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -172,7 +172,7 @@ const MyLeads = () => {
       </div>
 
       {isLeadsValid ? (
-        <>
+        <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
             <thead>
               <tr>
@@ -180,26 +180,69 @@ const MyLeads = () => {
                   Index
                 </th>
                 {Object.keys(filteredLeads[0])
-                  .filter((key) => key !== "_id" && key !== "accounts" && key !== "uploaderId" && key !== "__v" )
+                  .filter(
+                    (key) =>
+                      key !== "_id" &&
+                      key !== "accounts" &&
+                      key !== "uploaderId" &&
+                      key !== "__v" &&
+                      key !== "index" &&
+                      key !== "email" && 
+                      key !== "age" &&
+                      key !== "pincode" && 
+                      key !== "dob" && 
+                      key !== "salary" && 
+                      key !== "gender" && 
+                      key !== "salaryType"
+                  )
                   .map((key) => (
-                    <th key={key} className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
+                    <th
+                      key={key}
+                      className="px-4 py-2 border border-gray-300 bg-gray-100 text-left"
+                    >
                       {key}
                     </th>
                   ))}
-                <th className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">Action</th>
+                <th className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentLeads.map((lead, index) => (
                 <tr key={index}>
-                  <td className="px-4 py-2 border border-gray-300">{index + 1 + indexOfFirstLead}</td>
+                  <td className="px-4 py-2 border border-gray-300">
+                    {index + 1 + indexOfFirstLead}
+                  </td>
                   {Object.entries(lead)
-                    .filter(([key]) => key !== "_id" && key !== "accounts" && key !== "uploaderId "  && key !== "__v" && key !== "uploaderId" )
+                    .filter(
+                      ([key]) =>
+                        key !== "_id" &&
+                        key !== "accounts" &&
+                        key !== "uploaderId" &&
+                        key !== "__v" &&
+                        key !== "index" &&
+                        key !== "email" && 
+                        key !== "age" &&
+                        key !== "pincode" && 
+                        key !== "dob" && 
+                        key !== "salary" && 
+                        key !== "gender" && 
+                        key !== "salaryType"
+                    )
                     .map(([_, value], idx) => (
-                      <td key={idx} className="px-4 py-2 border border-gray-300">{value || "N/A"}</td>
+                      <td
+                        key={idx}
+                        className="px-4 py-2 border border-gray-300"
+                      >
+                        {value || "N/A"}
+                      </td>
                     ))}
                   <td className="px-4 py-2 border border-gray-300">
-                    <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => deleteLead(index)}>
+                    <button
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                      onClick={() => deleteLead(index)}
+                    >
                       Delete
                     </button>
                   </td>
@@ -207,7 +250,7 @@ const MyLeads = () => {
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       ) : (
         <p>No leads to display.</p>
       )}

@@ -115,6 +115,11 @@ const Login = ({ onAuthToggle }) => {
           sameSite: "Strict",
           expires: 1,
         });
+        Cookies.set("role", "admin", {
+          secure: true,
+          sameSite: "Strict",
+          expires: 1,
+        });
   
         console.log("User ID:", userId);
   
@@ -146,6 +151,7 @@ const Login = ({ onAuthToggle }) => {
       const response = await axios.post("http://localhost:3000/generate-otp", {
         phone: formData.phone,
       });
+
       console.log(response.data);
       console.log(formData)
       setIsOnScreen(true);

@@ -86,7 +86,7 @@ const Userform = () => {
   }, [data]);
 
   return (
-    <div className="bg-gray-200 w-[100%]">
+    <div className="bg-gray-200 w-[90%]  sm:w-[100%]">
       <div className="flex justify-between">
         <div className="font -bold ml-3">
           <h1 className="text-3xl ">Welcome Guest</h1>
@@ -98,152 +98,72 @@ const Userform = () => {
         </div>
       </div>
 
-      <div className="flex h-[11vh] w-full space-x-2 mt-2 flex-col-2 ">
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[24%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-lg ml-3 mt-2 text-gray-500 ">
-              Total Leads
-            </h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">{leads}</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-blue-100 border items-center w-[14%] rounded-full mr-3">
-            <MdGroups size={28} className="text-blue-500 ml-[10%]   mt-1" />
-          </div>
-        </div>
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[24%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-lg ml-3 mt-2 text-gray-500  ">
-              Total User
-            </h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">{user}</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-green-100 border items-center w-[14%] rounded-full mr-3">
-            <BsSendArrowUpFill
-              size={20}
-              className="text-green-500 ml-[16%] mt-[24%]"
-            />
-          </div>
-        </div>
-
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[24%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-lg ml-3 mt-2 text-gray-500  ">
-              Conversion Rate
-            </h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-yellow-100 border items-center w-[14%] rounded-full mr-3">
-            <FaPercent
-              size={16}
-              className="text-yellow-500 ml-[26%]   mt-[29%]"
-            />
-          </div>
-        </div>
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[24%] rounded-md flex justify-between items-center">
-          <div>
-            {" "}
-            <h1 className="text-lg ml-3 mt-2 text-gray-500  ">
-              Approval Leads
-            </h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-sky-100 border items-center w-[14%] rounded-full mr-3">
-            <FaCheckCircle
-              size={20}
-              className="text-sky-500 ml-[22%]   mt-[20%]"
-            />
-          </div>
-        </div>
+      <div className="flex  flex-wrap justify-center sm:justify-around gap-4 mt-2">
+  {[
+    { title: "Total Leads", value: leads, icon: <MdGroups size={28} className="text-blue-500" />, bgColor: "bg-blue-100" },
+    { title: "Total User", value: user, icon: <BsSendArrowUpFill size={20} className="text-green-500" />, bgColor: "bg-green-100" },
+    { title: "Conversion Rate", value: "1", icon: <FaPercent size={16} className="text-yellow-500" />, bgColor: "bg-yellow-100" },
+    { title: "Approval Leads", value: "1", icon: <FaCheckCircle size={20} className="text-sky-500" />, bgColor: "bg-sky-100" }
+  ].map(({ title, value, icon, bgColor }, index) => (
+    <div key={index} className="h-[11vh] w-[48%] sm:w-[23%]  bg-white border shadow-lg rounded-md flex justify-between items-center p-4">
+      <div>
+        <h1 className="text-lg text-gray-500">{title}</h1>
+        <h1 className="font-bold text-3xl">{value}</h1>
       </div>
-
-      <div className="flex h-[10vh] space-x-4 mt-6 ">
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[16%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-md ml-3 mt-2 text-gray-500 ">Reject</h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-blue-100 border items-center w-[19%] rounded-full mr-3">
-            <FaFile size={20} className="text-sky-500 ml-[23%]   mt-[23%]" />
-          </div>
-        </div>
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[16%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-md ml-3 mt-2 text-gray-500  ">Approved</h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-blue-100 border items-center w-[19%] rounded-full mr-3">
-            <IoMdCheckboxOutline
-              size={20}
-              className="text-green-500 ml-[23%] mt-[25%] "
-            />
-          </div>
-        </div>
-
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[16%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-md ml-3 mt-2 text-gray-500 ">
-              Inprogress
-            </h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-blue-100 border items-center w-[19%] rounded-full mr-3">
-            <FaFile size={20} className="text-sky-500 ml-[23%]   mt-[23%]" />
-          </div>
-        </div>
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[16%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-lg ml-3 mt-2 text-gray-500 ">Disbursed</h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-blue-100 border items-center w-[19%] rounded-full mr-3">
-            <FaFile size={20} className="text-sky-500 ml-[23%]   mt-[23%]" />
-          </div>
-        </div>
-        <div className="h-[100%] border ml-3 shadow-lg bg-white w-[16%] rounded-md flex justify-between items-center ">
-          <div>
-            {" "}
-            <h1 className="text-md ml-3 mt-2 text-gray-500 ">New Leads</h1>{" "}
-            <h1 className="font-bold ml-3 text-3xl">1</h1>
-          </div>
-          <div className="  text-center mt-1 h-10 bg-blue-100 border items-center w-[19%] rounded-full mr-3">
-            <FaFile size={20} className="text-sky-500 ml-[23%]   mt-[23%]" />
-          </div>
-        </div>
+      <div className={`h-10 w-10 flex items-center justify-center rounded-full ${bgColor}`}>
+        {icon}
       </div>
+    </div>
+  ))}
+</div>
 
-      <div className="w-full h-[14vh] mt-[2%] bg-white flex items-center space-x-5 px-4">
-        {PartnerData.map((item) => (
+
+<div className="w-full h-auto mt-4 bg-white px-4 py-4">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    {PartnerData.map((item) => (
+      <div
+        key={item.id}
+        className="w-full sm:w-[100%]  shadow-md flex flex-col items-center p-4 bg-white rounded-lg"
+      >
+        <div className="flex justify-between w-full">
+          <div className="text-gray-700 font-medium">{item.partner}:</div>
+          <div className="bg-teal-400 h-6 w-8 text-white font-semibold rounded-md ">
+            {item.Number}%
+          </div>
+        </div>
+        <div className="w-full bg-gray-300 h-2 rounded mt-4">
           <div
-            key={item.id}
-            className="w-[20%] h-[80%] shadow flex flex-col items-center"
-          >
-            <div className="flex justify-between w-full mt-2 ">
-              <div className="text-center text-gray-700 font-medium ml-2">
-                {item.partner}:
-              </div>
-              <div className="mr-3 border bg-teal-400 w-[14%] text-white font-bold rounded-md">
-                {item.Number}%
-              </div>
-            </div>
-            <div className="w-[97%] bg-gray-300 h-2 rounded mt-4">
-              <div
-                className="bg-green-500 h-2 rounded "
-                style={{
-                  width: `${item.Number}%`,
-                  transition: "width 0.5s ease",
-                }}
-              ></div>
-            </div>
-          </div>
-        ))}
+            className="bg-green-500 h-2 rounded transition-all duration-500"
+            style={{ width: `${item.Number}%` }}
+          ></div>
+        </div>
       </div>
+    ))}
+  </div>
+</div>
+
+<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-6">
+  {[
+    { title: "Reject", value: "1", icon: <FaFile size={20} className="text-sky-500" /> },
+    { title: "Inprogress", value: "1", icon: <FaFile size={20} className="text-sky-500" /> },
+    { title: "Disbursed", value: "1", icon: <FaFile size={20} className="text-sky-500" /> },
+    { title: "New Leads", value: "1", icon: <FaFile size={20} className="text-sky-500" /> }
+  ].map(({ title, value, icon }, index) => (
+    <div key={index} className="h-[10vh] w-[99%] sm:w-[100%]  bg-white border shadow-lg rounded-md flex justify-between items-center p-4">
+      <div>
+        <h1 className="text-md text-gray-500">{title}</h1>
+        <h1 className="font-bold text-3xl">{value}</h1>
+      </div>
+      <div className="h-10 w-10 flex items-center justify-center rounded-full bg-blue-100">
+        {icon}
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
+
       <div>
         <Tabledata />
       </div>

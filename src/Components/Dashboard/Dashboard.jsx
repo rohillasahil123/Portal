@@ -44,7 +44,7 @@ const Dashboard = () => {
 
   return (
     <Router>
-      <div className="flex bg-gradient-to-br from-blue-100 to-indigo-200">
+      <div className="flex ">
         {/* {isLoggedIn && <Sidebar isLoggedIn={isLoggedIn} onAuthToggle={handleAuthToggle} />} */}
         <Sidebar />
 

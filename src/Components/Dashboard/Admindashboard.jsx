@@ -1,76 +1,63 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { MdGroups } from "react-icons/md";
 import { SiReactivex } from "react-icons/si";
-import { FaHandshake } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
-import Tabledata from "./Tabledata";
-import { Link } from "react-router-dom";
+import { FaHandshake, FaUser } from "react-icons/fa";
+import Tabledata from "./Tabledata"; // Ensure correct import
 
-const Admindashboard = () => {
+const AdminDashboard = () => {
   return (
-    <div className="bg-gray-200 w-[100%] h-[90vh] ">
-      <div className="h-[10vh] flex justify-between  w-[95%] items-center justify-self-center">
-        <div className="text-3xl font-bold  text-blue-500">Admin DashBoard</div>
-        <div className="flex space-x-2 item-center">
-          <div className="border bg-sky-400 hover:bg-sky-700 hover:cursor-pointer h-[30px]  w-18   text-white rounded-md ">
-            <button> <Link to='/create_user' >Add Partner</Link></button>
-          </div>
-          <div className="border bg-green-400 h-[30px] hover:bg-green-700 hover:cursor-pointer w-18  text-white rounded-md ">
-            <button> <Link to='/create_manager' > Add Manager </Link>  </button>
-           
-          </div>
-          <div className="border bg-yellow-400 h-[30px] hover:bg-yellow-700 hover:cursor-pointer w-18 text-white rounded-md ">
-            <button> <Link to='/create_vis' >Add Individual</Link></button>
-           
-          </div>
-        </div>
-      </div>
-      <h1 className="text-green-500 text-xl font-bold ml-8">Online Users</h1>
-      <div
-        className="h-[13vh] bg-white items-center flex w-[95%]"
-        style={{ justifySelf: "center" }}
-      >
-        <div className="w-[23%] bg-gray-100 h-[70%]  border ml-2 ">
-          <h1 className="font-bold text-md ml-2">Admin</h1>
-          <h5 className="text-sm ml-2">Time</h5>
+    <div className="bg-gray-200 w-[97%] sm:w-full min-h-screen p-4 md:p-6">
+      {/* Header */}
+      <div className="h-auto md:h-[10vh] flex flex-col md:flex-row justify-between w-full md:w-[95%] mx-auto items-center">
+        <div className="text-xl md:text-3xl font-bold text-blue-500">Admin DashBoard</div>
+        <div className="flex space-x-2 mt-3 md:mt-0">
+          {[
+            { path: "/create_user", label: "Add Partner", bg: "bg-sky-400", hover: "hover:bg-sky-700" },
+            { path: "/create_manager", label: "Add Manager", bg: "bg-green-400", hover: "hover:bg-green-700" },
+            { path: "/create_vis", label: "Add Individual", bg: "bg-yellow-400", hover: "hover:bg-yellow-700" },
+          ].map((btn, index) => (
+            <Link
+              key={index}
+              to={btn.path}
+              className={`${btn.bg} ${btn.hover} h-[30px] px-3 flex items-center text-white text-sm md:text-md rounded-md`}
+            >
+              {btn.label}
+            </Link>
+          ))}
         </div>
       </div>
 
-      <div className="mt-7 h-[15vh] flex justify-around">
-        <div className="h-[98%] text-lg font-bold text-center rounded bg-white w-[20%] justify-center">
-          <MdGroups color="blue" size={40} className="justify-self-center" />
-          <h1>Total User</h1>
-          <h1 className="text-blue-800 text-3xl">1</h1>
-        </div>
-        <div className="h-[98%] text-lg font-bold text-center rounded bg-white w-[20%] justify-center">
-          <SiReactivex
-            color="green"
-            size={40}
-            className="mt-1 justify-self-center"
-          />
-          <h1>Active User</h1>
-          <h1 className="text-green-800 text-3xl">1</h1>
-        </div>
-        <div className="h-[98%] text-lg font-bold text-center rounded bg-white w-[20%] justify-center">
-          <FaHandshake color="red" size={40} className="justify-self-center" />
-          <h1>Partner</h1>
-          <h1 className="text-red-500 text-3xl">1</h1>
-        </div>
-        <div className="h-[98%] text-lg font-bold text-center rounded bg-white w-[20%] justify-center">
-          <FaUser
-            color="yellow"
-            size={30}
-            className=" mt-2 justify-self-center"
-          />
-          <h1>Individuals</h1>
-          <h1 className="text-yellow-500 text-3xl">1</h1>
+      {/* Online Users */}
+      <h1 className="text-green-500 text-lg md:text-xl font-bold mt-6 ml-4">Online Users</h1>
+      <div className="h-auto sm:h-[13vh] bg-white flex items-center p-4 w-full md:w-[95%] mx-auto rounded-md shadow-md">
+        <div className="w-[34%] sm:w-[23%] bg-gray-100 h-[90%] sm:h-[100%] py-1 px-2 border rounded-md">
+          <h1 className="font-bold text-md">Admin</h1>
+          <h5 className="text-sm">Time</h5>
         </div>
       </div>
-      <div className="ml-2 mt-[4%] bg-white w-[97%]">
+
+      {/* Statistics Section */}
+      <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-4 w-full md:w-[95%] mx-auto">
+        {[
+          { icon: <MdGroups size={40} color="blue" />, label: "Total User", value: "1", color: "text-blue-800" },
+          { icon: <SiReactivex size={40} color="green" />, label: "Active User", value: "1", color: "text-green-800" },
+          { icon: <FaHandshake size={40} color="red" />, label: "Partner", value: "1", color: "text-red-500" },
+          { icon: <FaUser size={30} color="yellow" />, label: "Individuals", value: "1", color: "text-yellow-500" },
+        ].map((stat, index) => (
+          <div key={index} className="h-[15vh] flex flex-col items-center justify-center bg-white rounded-md shadow-md p-4">
+            {stat.icon}
+            <h1 className="text-lg font-bold mt-2">{stat.label}</h1>
+            <h1 className={`${stat.color} text-3xl`}>{stat.value}</h1>
+          </div>
+        ))}
+      </div>
+
+      {/* Table Data */}
+      <div className="mt-6 bg-white w-full md:w-[97%] mx-auto rounded-md shadow-md p-4">
         <Tabledata />
       </div>
     </div>
   );
 };
 
-export default Admindashboard;
+export default AdminDashboard;

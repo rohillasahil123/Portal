@@ -53,7 +53,7 @@ const Eli = () => {
 
   return (
     <div className="h-[100vh] bg-gray-300 flex items-center justify-center ">
-      <div className="w-[98%] h-[70vh] max-w-2xl bg-white p-3 sm:p-4  rounded-xl shadow-xl">
+      <div className="w-[80%] h-[60vh] max-w-2xl bg-white p-3 sm:p-4  rounded-xl shadow-xl">
         <h1 className="text-xl font-bold text-center text-gray-800 mb-2 ">Check Eligibility</h1>
         <form onSubmit={handleFormSubmit} className="space-y-4">
           {step === 1 && (
