@@ -1,50 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import toast from "react-hot-toast";
+import { ThemeContext } from "../../Context/Context";
 
 const PartnerTable = () => {
+  const PartnerData = useContext(ThemeContext);
+  const [dataPartner, setDataPartner] = useState(null); // Initialize as null
+
+  useEffect(() => {
+    if (PartnerData && PartnerData.allData && PartnerData.allData.partners) {
+      setDataPartner(PartnerData.allData);
+      console.log(dataPartner)
+    }
+  }, [PartnerData]);
+
   const [buttonStates, setButtonStates] = useState({});
-
-  const [partners, setPartners] = useState([
-    { id: 1, username: "JohnDoe", type: "Admin", partner: "Partner1", status: "Active", lastLogin: "2025-01-20" },
-    { id: 2, username: "JaneSmith", type: "User", partner: "Partner2", status: "Inactive", lastLogin: "2025-01-18" },
-    { id: 3, username: "MarkJohnson", type: "Admin", partner: "Partner3", status: "Active", lastLogin: "2022-01-22" },
-  ]);
-
-  const [searchQuery, setSearchQuery] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const handleUpgrade = (id) => {
-    setButtonStates((prev) => ({
-      ...prev,
-      [id]: !prev[id], 
-    }));
-    toast.success("Upgrade")
-  };
-  
-  const handleDelete = (id) => {
-    setPartners(partners.filter((partner) => partner.id !== id));
-  };
 
   const handleEdit = (id) => {
     alert("Edit functionality is not implemented yet.");
   };
 
-  const filteredPartners = partners.filter((partner) =>
-    partner.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleUpgrade = (id) => {
+    setButtonStates((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+    toast.success("Upgrade");
+  };
+
+  const handleDelete = (id) => {
+    if (dataPartner && dataPartner.partners) {
+      const updatedPartners = dataPartner.partners.filter(
+        (partner) => partner.id !== id
+      );
+      setDataPartner({ ...dataPartner, partners: updatedPartners });
+      toast.success("Partner deleted");
+    }
+  };
 
   return (
     <div className="container mx-auto py-3 ml-64 w-[96%] sm:w-[79%]">
-      <h1 className="font-semibold sm:font-bold text-xl sm:text-2xl text-center">All User Data</h1>
-      {/* Search and Select Dropdown */}
+      <h1 className="font-semibold sm:font-bold text-xl sm:text-2xl text-center">
+        All User Data
+      </h1>
       <div className="mb-4 flex justify-between items-center">
-        <input
-          type="text"
-          placeholder="Search Partner..."
-          className="p-2 border rounded"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
         <select
           className="p-2 border rounded"
           value={itemsPerPage}
@@ -56,43 +55,52 @@ const PartnerTable = () => {
         </select>
       </div>
 
-      {/* Table */}
-      <table className="w-[100%]">
-        <thead className="w-[80%]">
+      <table className="w-full">
+        <thead className="w-full">
           <tr className="bg-gray-100">
             <th className="px-4 py-2">Username</th>
             <th className="px-4 py-2">Type</th>
             <th className="px-4 py-2">Assigned</th>
-            <th className="px-4 py-2">Status</th>
-            <th className="px-4 py-2">Last Login</th>
+            <th className="px-4 py-2">Phone</th>
             <th className="px-4 py-2">Action</th>
             <th className="px-4 py-2">Upgrade</th>
           </tr>
         </thead>
         <tbody className="text-center">
-          {filteredPartners.slice(0, itemsPerPage).map((partner) => (
+          {dataPartner && dataPartner.partners && dataPartner.partners.slice(0, itemsPerPage).map((partner) => (
             <tr key={partner.id} className="ml-6 border-b">
-              <td className="px-4 py-2">{partner.username}</td>
-              <td className="px-4 py-2">{partner.type}</td>
-              <td className="px-4 py-2">{partner.partner}</td>
-              <td className="px-4 py-2">{partner.status}</td>
-              <td className="px-4 py-2">{partner.lastLogin}</td>
-              <td className="px-4 py-2">
-                <button onClick={() => handleEdit(partner.id)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
+              <td className="px-4 py-2">{partner.name}</td>
+              <td className="px-4 py-2">{partner.desinationType}</td>
+              <td className="px-4 py-2">{partner.partnerStatus}</td>
+              <td className="px-4 py-2">{partner.phone}</td>
+              <td className="px-4 py-2 space-x-2">
+                <button
+                  onClick={() => handleEdit(partner.id)}
+                  className="bg-white text-black border hover:bg-gray-300 shadow-md px-2 py-1 rounded"
+                >
                   Edit
                 </button>
-                <button onClick={() => handleDelete(partner.id)} className="bg-red-500 text-white px-2 py-1 rounded">
+                <button
+                  onClick={() => handleDelete(partner.id)}
+                  className="bg-white text-black border shadow-md hover:bg-gray-300 px-2 py-1 rounded"
+                >
                   Delete
                 </button>
               </td>
               <td>
                 {buttonStates[partner.id] ? (
-                  <button onClick={() => handleUpgrade(partner.id)} className="bg-gray-500 text-white px-2 py-1 rounded">
-                    Individual
+                  <button
+                    onClick={() => handleUpgrade(partner.id)}
+                    className="bg-gray-500 shadow-sm text-white px-2 py-1 rounded"
+                  >
+                    {partner.desinationType}
                   </button>
                 ) : (
-                  <button onClick={() => handleUpgrade(partner.id)} className="bg-green-500 text-white px-2 py-1 rounded">
-                    Partner
+                  <button
+                    onClick={() => handleUpgrade(partner.id)}
+                    className="bg-white text-black border hover:bg-gray-300 shadow-sm px-2 py-1 rounded"
+                  >
+                 {partner.desinationType}
                   </button>
                 )}
               </td>

@@ -29,9 +29,9 @@ const Profile = () => {
               className="w-full p-2 border border-gray-300 rounded-md"
             />
           </div>
-          <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md w-full">
+          <button className="bg-white border shadow-md hover:bg-gray-300 text-black py-2 px-4 rounded-md w-full">
             <Link to="/list">
-            Watch Your Lander List 
+            See Your Lender List 
             </Link>
           </button>
         </div>
@@ -39,7 +39,6 @@ const Profile = () => {
 
       <div className="flex-1 mt-[5%]">
         <h2 className="text-2xl font-bold mb-2">Sahil Rohilla</h2>
-        <p className="text-gray-600 mb-4">Ratings: ⭐⭐⭐⭐⭐</p>
         
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-2">Contact Information</h3>

@@ -68,8 +68,8 @@ const UploadCsv = ({ onUpload }) => {
  
       <div className="bg-white p-5 rounded-lg shadow-lg  max-w-3xl">
 
-      <div className="sm:px-4   sm:py-2 px-1 py-1  h-7 sm:h-9 w-12 sm:w-16 bg-green-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-green-600">
-      <Link to="/individual"><h6 className="text-sm text-center">Single</h6> </Link>
+      <div className="sm:px-4   sm:py-2 px-1 py-1  h-7 sm:h-9 w-12 sm:w-16 bg-white text-black font-semibold text-center rounded-md cursor-pointer hover:bg-gray-200 border shadow-md">
+      <Link to="/individual"><h6 className="text-sm px-[-2]">Single</h6> </Link>
           </div>
           
         <div className="flex items-center justify-center mb-8">

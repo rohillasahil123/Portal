@@ -12,7 +12,6 @@ import {
 
 import { Line } from "react-chartjs-2";
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,7 +32,7 @@ const StaticChart = () => {
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 2,
-        tension: 0.4, // Smooth curve
+        tension: 0.4, 
       },
     ],
   };

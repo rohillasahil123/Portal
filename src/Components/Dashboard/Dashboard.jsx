@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import UploadCsv from "./UploadCsv";
 import MyLeads from "./MyLeads";
@@ -20,7 +16,7 @@ import CreateManager from "./Create/Create_manager";
 import Profile from "./Profile/Profile";
 import LoginUserPage from "./CreateAuth/LoginInd";
 import LoginPartner from "./CreateAuth/LoginPartner";
-import LanderList from "./LanderList/LanderList"
+import LenderList from "./LenderList/LenderList";
 import { Toaster } from "react-hot-toast";
 
 const Dashboard = () => {
@@ -54,30 +50,26 @@ const Dashboard = () => {
         >
           <Routes>
             <Route path="/board" element={<Board />} />
-            <Route
-              path="/uploadcsv"
-              element={<UploadCsv onUpload={handleUpload} />}
-            />
+            <Route path="/uploadcsv" element={<UploadCsv onUpload={handleUpload} />}/>
             <Route path="/myleads" element={<MyLeads leads={leads} />} />
             <Route path="/admin" element={<AdminDashBoaard />} />
             <Route path="/manage/partner" element={<ManageAll />} />
             <Route path="/EmiCalculator" element={<EMICalculator />} />
             <Route path="/eli" element={<Eligibility />} />
             <Route path="/loginInd" element={<LoginUserPage />} />
-            <Route path="/loginPartner" element={  <LoginPartner/>} />
+            <Route path="/loginPartner" element={<LoginPartner />} />
             <Route path="/create_user" element={<CreatePartner />} />
             <Route path="/create_vis" element={<CreateInd />} />
             <Route path="/create_manager" element={<CreateManager />} />
             <Route path="/individual" element={<IndividualLead />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/list" element={ <LanderList/> } />
+            <Route path="/list" element={<LenderList />} />
             <Route path="/" element={<Loginpage />} />
           </Routes>
         </div>
       </div>
-      <Toaster/>
+      <Toaster />
     </Router>
-
   );
 };
 

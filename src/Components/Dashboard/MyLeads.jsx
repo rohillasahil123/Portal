@@ -130,7 +130,7 @@ const MyLeads = () => {
           className="border border-gray-300 rounded px-4 py-2 w-[90%] md:max-w-md"
         />
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+          className="bg-white text-black px-4 border py-2 rounded hover:bg-gray-200 disabled:bg-gray-400"
           onClick={downloadCSV}
           disabled={!isLeadsValid}
         >
@@ -153,7 +153,7 @@ const MyLeads = () => {
           className="border border-gray-300 rounded px-4 py-2 w-full sm:w-auto"
         />
         <button
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          className="hover:bg-gray-200 text-black  border  px-4 py-2 rounded bg-white"
           onClick={handleDateSearch}
         >
           Search
@@ -211,7 +211,7 @@ const MyLeads = () => {
             <tbody>
               {currentLeads.map((lead, index) => (
                 <tr key={index}>
-                  <td className="px-4 py-2 border border-gray-300">
+                  <td className="px-4 py-2 border text-[12px] border-gray-300">
                     {index + 1 + indexOfFirstLead}
                   </td>
                   {Object.entries(lead)
@@ -241,7 +241,7 @@ const MyLeads = () => {
                     ))}
                   <td className="px-4 py-2 border border-gray-300">
                     <button
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                      className="bg-white text-black px-2 py-1 rounded hover:bg-gray-200"
                       onClick={() => deleteLead(index)}
                     >
                       Delete

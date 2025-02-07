@@ -42,7 +42,7 @@ const AdminDashboard = () => {
         </div>
         <div className="w-[20%] bg-gray-100 h-[18vh]  p-6 text-center rounded-md mb-4">
           <h2 className="text-[15px] font-bold">Delete Partner List </h2>
-          <button className=" h-[50%] mt-1 bg-white text-orange-400 py-1 px-2 rounded">Watch List</button>
+          <button className=" h-[50%] mt-1 bg-white text-orange-400 py-1 px-2 rounded">See List</button>
         </div>
       </div>
 

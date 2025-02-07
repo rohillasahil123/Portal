@@ -41,7 +41,6 @@ const Login = ({ onAuthToggle }) => {
   }
 
 
-  // Handle OTP input change
   const handelChange = (e, index) => {
     const value = e.target.value;
     if (/^\d?$/.test(value)) {
@@ -49,10 +48,10 @@ const Login = ({ onAuthToggle }) => {
       newOtp[index] = value;
       setOtp(newOtp);
 
-      // Auto focus the next input if not the last field
       if (value && index < otp.length - 1) {
         document.getElementById(`otp-input-${index + 1}`).focus();
       }
+      const allFilled = newOtp.every((val) => val !== "")
     }
   };
 
@@ -273,7 +272,7 @@ const Login = ({ onAuthToggle }) => {
             <div className="mb-4">
               <p className="text-sm font-medium">Email Address</p>
               <input
-                type="text"
+                type="email"
                 placeholder="Enter your email"
                 className={`h-11 p-2 border w-full rounded shadow ${
                   error.email ? "border-red-500" : "border-gray-300"

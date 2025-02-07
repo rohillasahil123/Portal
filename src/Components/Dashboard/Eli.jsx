@@ -46,6 +46,7 @@ const Eli = () => {
   return (
     <div className="h-screen flex items-center justify-center ">
       <div className="w-full max-w-2xl bg-white p-6 sm:p-8 rounded-xl shadow-xl overflow-hidden relative">
+        {/* Wave effect using a pseudo element */}
         <div className="absolute inset-0 bg-gradient-to-r from-white via-gray-200 to-gray-400 opacity-50 rounded-xl -z-10"></div>
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">Check Eligibility</h1>
         <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -105,7 +106,7 @@ const Eli = () => {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="w-32 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-300"
+                  className="w-32 py-2 bg-white text-black rounded-md border shadow-md hover:bg-gray-200 transition-all duration-300"
                 >
                   Next
                 </button>

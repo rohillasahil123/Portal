@@ -126,7 +126,7 @@ useEffect(() => {
     <div className="flex flex-col lg:flex-row gap-6 px-4 w-[100%]">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 w-[100%]">
      
-        <div className="bg-white p-6 rounded-lg shadow w-full max-w-md mx-auto">
+        <div className="bg-white p-6 rounded-lg shadow  w-[100%] mx-auto">
           <Tabledata />
         </div>
 

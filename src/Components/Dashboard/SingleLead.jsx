@@ -42,15 +42,15 @@ const LeadForm = () => {
   };
 
   return (
-    <div className="min-h-[95vh] flex flex-col ml-0 sm:ml-[12%] items-center justify-center p-4">
+    <div className="min-h-[95vh] flex flex-col ml-[14%] items-center justify-center p-4">
       {userrole === "admin" || userrole === "DSA" ? (
         <div className="flex space-x-2 absolute top-4 right-4 z-10">
-          <div className="px-4 py-2 h-10 bg-green-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-green-600 transition duration-300">
+          <div className="px-4 py-2 h-10 bg-white text-black font-semibold text-center rounded-md cursor-pointer hover:bg-gray-200 border shadow-md transition duration-300">
             <h6 className="text-sm">Single</h6>
           </div>
           <Link
             to="/uploadcsv"
-            className="px-4 py-2 h-10 bg-red-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-red-700 transition duration-300"
+           className="px-4 py-2 h-10 bg-white text-black font-semibold text-center rounded-md cursor-pointer hover:bg-gray-200 border shadow-md transition duration-300"
           >
             <h6 className="text-sm">Bulk</h6>
           </Link>
@@ -207,7 +207,7 @@ const LeadForm = () => {
           <div>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-semibold py-3 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 transition duration-300"
+              className="w-full bg-white text-black font-semibold py-3 rounded-md hover:bg-gray-200 border  shadow-md focus:ring-2 focus:ring-blue-400 transition duration-300"
             >
               Submit Form
             </button>
