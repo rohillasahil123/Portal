@@ -77,7 +77,7 @@ const EMICalculator = () => {
   };
 
   return (
-    <div className=" mx-auto p-3 bg-white shadow-lg rounded-lg">
+    <div className=" mx-auto p-8 ml-[17%] w-[80%] bg-white  shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4 text-center">EMI Calculator</h1>
 
       {/* Loan Details Form */}
@@ -121,13 +121,12 @@ const EMICalculator = () => {
         Calculate EMI
       </button>
 
-      <div className="mt-1 ] text-center">
+      <div className=" text-center mt-2">
         <h2 className="text-xl font-semibold">Your EMI: ₹{emi}</h2>
-      </div>
-            {/* Show Chart */}
+      </div >
       {amortizationData.length > 0 && (
         
-        <div className="sm:w-[65%] w-[100%]">
+        <div className="sm:w-[65%] mt-3 w-[100%]">
           <Line data={chartData} />
         </div>
       )}

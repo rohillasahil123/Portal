@@ -1,63 +1,97 @@
-import { Link } from "react-router-dom";
-import { MdGroups } from "react-icons/md";
-import { SiReactivex } from "react-icons/si";
-import { FaHandshake, FaUser } from "react-icons/fa";
-import Tabledata from "./Tabledata"; // Ensure correct import
+import React from 'react';
+import { Line } from 'react-chartjs-2';
+import { CircularProgress } from '@mui/material';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title } from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title);
 
 const AdminDashboard = () => {
+  const chartData = {
+    labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: 'DSA Partner',
+        data: [100, 200, 300, 400, 300, 200, 100, 500],
+        borderColor: 'blue',
+        fill: false,
+      },
+      {
+        label: 'Individual Partner',
+        data: [500, 400, 300, 200, 300, 400, 500, 200],
+        borderColor: 'green',
+        fill: false,
+      },
+    ],
+  };
+
   return (
-    <div className="bg-gray-200 w-[97%] sm:w-full min-h-screen p-4 md:p-6">
-      {/* Header */}
-      <div className="h-auto md:h-[10vh] flex flex-col md:flex-row justify-between w-full md:w-[95%] mx-auto items-center">
-        <div className="text-xl md:text-3xl font-bold text-blue-500">Admin DashBoard</div>
-        <div className="flex space-x-2 mt-3 md:mt-0">
-          {[
-            { path: "/create_user", label: "Add Partner", bg: "bg-sky-400", hover: "hover:bg-sky-700" },
-            { path: "/create_manager", label: "Add Manager", bg: "bg-green-400", hover: "hover:bg-green-700" },
-            { path: "/create_vis", label: "Add Individual", bg: "bg-yellow-400", hover: "hover:bg-yellow-700" },
-          ].map((btn, index) => (
-            <Link
-              key={index}
-              to={btn.path}
-              className={`${btn.bg} ${btn.hover} h-[30px] px-3 flex items-center text-white text-sm md:text-md rounded-md`}
-            >
-              {btn.label}
-            </Link>
-          ))}
+    <div className="p-8 w-[82%] ml-0 sm:ml-[16%]">
+      {/* Stats Header */}
+      <div className="flex flex-wrap justify-between text-[12px]">
+        <div className="w-[20%] bg-gray-100 h-[18vh] p-6 text-center rounded-md mb-4">
+          <h2 className="text-2xl font-bold">1259</h2>
+          <p>Total Partner</p>
+        </div>
+        <div className="w-[20%] bg-gray-100 h-[18vh] p-6 text-center rounded-md mb-4">
+          <h2 className="text-2xl font-bold">23</h2>
+          <p>DSA Partner</p>
+        </div>
+        <div className="w-[20%] bg-gray-100 h-[18vh] p-6 text-center rounded-md mb-4">
+          <h2 className="text-2xl font-bold">123</h2>
+          <p>Individual Partner</p>
+        </div>
+        <div className="w-[20%] bg-gray-100 h-[18vh]  p-6 text-center rounded-md mb-4">
+          <h2 className="text-[15px] font-bold">Delete Partner List </h2>
+          <button className=" h-[50%] mt-1 bg-white text-orange-400 py-1 px-2 rounded">Watch List</button>
         </div>
       </div>
 
-      {/* Online Users */}
-      <h1 className="text-green-500 text-lg md:text-xl font-bold mt-6 ml-4">Online Users</h1>
-      <div className="h-auto sm:h-[13vh] bg-white flex items-center p-4 w-full md:w-[95%] mx-auto rounded-md shadow-md">
-        <div className="w-[34%] sm:w-[23%] bg-gray-100 h-[90%] sm:h-[100%] py-1 px-2 border rounded-md">
-          <h1 className="font-bold text-md">Admin</h1>
-          <h5 className="text-sm">Time</h5>
+      {/* Main Content */}
+      <div className="flex flex-wrap justify-between">
+        {/* Visitor Statistics */}
+        <div className="w-3/5 mb-4">
+          <h3 className="text-xl font-bold mb-2">Login Details</h3>
+          <Line data={chartData} />
         </div>
+
+        <div className="w-1/3 mt-16 bg-gray-100 text-center rounded-md p-4">
+      <h3 className="text-lg font-bold mt-2 mb-4">Tasks</h3>
+      <div className="relative flex flex-col items-center">
+      
+        <div className="absolute">
+          <CircularProgress
+            variant="determinate"
+            value={100}
+            size={140}
+            thickness={5}
+            sx={{ color: "sky" }} 
+          />
+        </div>
+        <CircularProgress
+          variant="determinate"
+          value={80}
+          size={140}
+          thickness={5}
+          sx={{ color: "Gray" }} 
+        />
+        <p className="mt-2 text-2xl font-bold">100%</p>
+      </div>
+    </div>
       </div>
 
-      {/* Statistics Section */}
-      <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-4 w-full md:w-[95%] mx-auto">
-        {[
-          { icon: <MdGroups size={40} color="blue" />, label: "Total User", value: "1", color: "text-blue-800" },
-          { icon: <SiReactivex size={40} color="green" />, label: "Active User", value: "1", color: "text-green-800" },
-          { icon: <FaHandshake size={40} color="red" />, label: "Partner", value: "1", color: "text-red-500" },
-          { icon: <FaUser size={30} color="yellow" />, label: "Individuals", value: "1", color: "text-yellow-500" },
-        ].map((stat, index) => (
-          <div key={index} className="h-[15vh] flex flex-col items-center justify-center bg-white rounded-md shadow-md p-4">
-            {stat.icon}
-            <h1 className="text-lg font-bold mt-2">{stat.label}</h1>
-            <h1 className={`${stat.color} text-3xl`}>{stat.value}</h1>
-          </div>
-        ))}
-      </div>
-
-      {/* Table Data */}
-      <div className="mt-6 bg-white w-full md:w-[97%] mx-auto rounded-md shadow-md p-4">
-        <Tabledata />
+      {/* Meet-Up Invite */}
+      <div className="bg-gray-100 p-6 rounded-md mt-6">
+        <h3 className="text-xl font-bold mb-2">Invite to Office Meet-up</h3>
+        <p>Due date: December 23, 2018</p>
+        <p>Rebecca Moore</p>
+        <div className="mt-4 flex gap-4">
+          <button className="bg-blue-500 text-white py-2 px-4 rounded">Call</button>
+          <button className="bg-yellow-500 text-white py-2 px-4 rounded">Edit</button>
+          <button className="bg-red-500 text-white py-2 px-4 rounded">Ended</button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboard

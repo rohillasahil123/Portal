@@ -1,174 +1,162 @@
-import React, { useEffect, useState } from "react";
-// import StaticChart from "./Chart";
-import { MdGroups } from "react-icons/md";
-import { BsSendArrowUpFill } from "react-icons/bs";
-import { FaPercent } from "react-icons/fa";
-import { FaCheckCircle } from "react-icons/fa";
-import { FaFile } from "react-icons/fa";
-import { IoMdCheckboxOutline } from "react-icons/io";
-import Tabledata from "./Tabledata";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts"; 
+import { GiCrossMark } from "react-icons/gi";
+import { FaUser } from "react-icons/fa";
+import { FaDollarSign, FaUsers,  FaCheckCircle } from "react-icons/fa";
+import Tabledata from "./Tabledata"
+import axios from "axios"
 import Cookies from "js-cookie";
 
-const Userform = () => {
-  const [data, setData] = useState("");
-  const [error , setError] = useState(null);
-  const [leads , setLeads] = useState(0)
+
+
+
+
+
+
+
+const Dashboard = () => {
+
+const [leads, setLeads] = useState(0);
+const [user, setUser] = useState(0);
+const [success, setSuccess] = useState(0);
+const [approve, setApprove] = useState(0);
+const [reject, setReject] = useState(0);
+const [progress, setProgress] = useState(0);
+
+
+const data = [
+  { name: "Jan", sales: leads },
+  { name: "Feb", sales: 6 },
+  { name: "Mar", sales: leads },
+  { name: "Apr", sales: leads },
+  { name: "May", sales: 10 },
+  { name: "Jun", sales: 59 },
+  { name: "Jul", sales: 80 },
+  { name: "Aug", sales: 30 },
+  { name: "Sep", sales: 80},
+  { name: "Oct", sales: 59},
+  { name: "Nov", sales: leads},
+  { name: "Dec", sales: 8},
+];
+
+
+
+
+
+
+useEffect(() => {
+  const uploaderId = Cookies.get("userId");
+  if (!uploaderId) return;
   
-  const [user , setUser] = useState(0)
-
-  const PartnerData = [
-    {
-      id: 1,
-      partner: "Fibe",
-      Number: "70",
-    },
-    {
-      id: 1,
-      partner: "Money",
-      Number: "40",
-    },
-    {
-      id: 1,
-      partner: "Zype",
-      Number: "27",
-    },
-  ];
-
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
-
-  useEffect(() => {
-    const uploaderId = Cookies.get("userId");
-    console.log(uploaderId, "1");
-    if (!uploaderId) {
-      setError("Uploader ID not found in cookies");
-      return;
+  const fetchLeads = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/getAllData/partners/leads");
+      setLeads(response.data.totalLeads);
+      setUser(response.data.successPercentage);
+      setSuccess(response.data.successPercentage);
+      setApprove(response.data.successLeads)
+      setReject(response.data.rejectedLeads)
+      setProgress(response.data.processingLeads)
+    } catch (err) {
+      console.error("Error fetching leads:", err);
     }
-    const fetchLeads = async () => {
-     
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/get-leads-by-uploader-id",
-          { uploaderId },
-          { headers: { "Content-Type": "application/json" } }
-        );
-     
-         setLeads(response.data.totalLeads);
-         setUser(response.data.totalUsers);
-        const leadsData = response?.data?.leads || [];
-  
-        const updatedLeads = leadsData.map((lead) => ({
-          ...lead,
-          pending: lead.pending ? lead.pending.toString() : "false",
-        }));
-     
-      } catch (err) {
-        console.error("Error fetching leads:", err);
-        setError(
-          err?.response?.data?.message || "Failed to fetch leads. Please try again later."
-        );
-      }
-    };
-  
-    fetchLeads();
-  }, []); 
+  };
+  fetchLeads();
+}, []);
 
-
-  useEffect(() => {
-    console.log("Updated data:", data);
-  }, [data]);
 
   return (
-    <div className="bg-gray-200 w-[90%]  sm:w-[100%]">
-      <div className="flex justify-between">
-        <div className="font -bold ml-3">
-          <h1 className="text-3xl ">Welcome Guest</h1>
-          <strong>Account Type</strong>
-        </div>
-        <div className="mr-3">
-          <h1 className=" text-gray-600 text-lg">Today Date</h1>
-          <p className=" text-lg">{formattedDate}</p>
-        </div>
+    <div className="p-8 bg-gray-100 ml-0 sm:ml-[12%] min-h-screen">
+
+<div className="grid grid-cols-2  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-4 mb-8">
+      <MetricCard title="Total Leads" value={leads} icon={<FaUsers />} />
+      <MetricCard title="Progress" value={progress} icon={<FaDollarSign />} />
+      <MetricCard title="Approval" value={approve} icon={<FaCheckCircle />} />
+      <MetricCard title="Rejected" value={reject} icon={<GiCrossMark />} />
+      <MetricCard title="Total User " value={reject} icon={<FaUser />} />
+    </div>
+
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:overflow-hidden">
+      
+      <div className="lg:col-span-2 bg-white rounded-lg p-6 shadow min-h-[200px]">
+        <h3 className="text-xl font-semibold mb-4">Track Lead</h3>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="sales" stroke="#8884d8" />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
-      <div className="flex  flex-wrap justify-center sm:justify-around gap-4 mt-2">
-  {[
-    { title: "Total Leads", value: leads, icon: <MdGroups size={28} className="text-blue-500" />, bgColor: "bg-blue-100" },
-    { title: "Total User", value: user, icon: <BsSendArrowUpFill size={20} className="text-green-500" />, bgColor: "bg-green-100" },
-    { title: "Conversion Rate", value: "1", icon: <FaPercent size={16} className="text-yellow-500" />, bgColor: "bg-yellow-100" },
-    { title: "Approval Leads", value: "1", icon: <FaCheckCircle size={20} className="text-sky-500" />, bgColor: "bg-sky-100" }
-  ].map(({ title, value, icon, bgColor }, index) => (
-    <div key={index} className="h-[11vh] w-[48%] sm:w-[23%]  bg-white border shadow-lg rounded-md flex justify-between items-center p-4">
-      <div>
-        <h1 className="text-lg text-gray-500">{title}</h1>
-        <h1 className="font-bold text-3xl">{value}</h1>
-      </div>
-      <div className={`h-10 w-10 flex items-center justify-center rounded-full ${bgColor}`}>
-        {icon}
+      
+      <div className="flex flex-row sm:flex-col text-[12px] gap-6">
+      
+        <div className="bg-white text-black p-6 rounded-lg shadow-md sm:w-[65%] mx-auto">
+          <h3 className="text-xl font-semibold mb-4">Total Leads</h3>
+          <p className="text-4xl font-bold">{leads}</p>
+          <ul className="mt-4 space-y-1">
+            <li>Disbursed in % = {success}</li>
+            <li>In progress = {progress}</li>
+            <li>Rejected = {reject}</li>
+          </ul>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow sm:max-w-md h-[100%] w-[44%] sm:w-[65%] sm:mx-auto">
+          <h3 className="text-xl font-semibold mb-4">Today Leads</h3>
+          <ul className="space-y-1">
+            <li>Disbursed: {approve}</li>
+            <li>Rejected: {reject}</li>
+          </ul>
+        </div>
       </div>
     </div>
-  ))}
-</div>
 
-
-<div className="w-full h-auto mt-4 bg-white px-4 py-4">
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-    {PartnerData.map((item) => (
-      <div
-        key={item.id}
-        className="w-full sm:w-[100%]  shadow-md flex flex-col items-center p-4 bg-white rounded-lg"
-      >
-        <div className="flex justify-between w-full">
-          <div className="text-gray-700 font-medium">{item.partner}:</div>
-          <div className="bg-teal-400 h-6 w-8 text-white font-semibold rounded-md ">
-            {item.Number}%
-          </div>
+    <div className="flex flex-col lg:flex-row gap-6 px-4 w-[100%]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 w-[100%]">
+     
+        <div className="bg-white p-6 rounded-lg shadow w-full max-w-md mx-auto">
+          <Tabledata />
         </div>
-        <div className="w-full bg-gray-300 h-2 rounded mt-4">
-          <div
-            className="bg-green-500 h-2 rounded transition-all duration-500"
-            style={{ width: `${item.Number}%` }}
-          ></div>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
 
-<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-6">
-  {[
-    { title: "Reject", value: "1", icon: <FaFile size={20} className="text-sky-500" /> },
-    { title: "Inprogress", value: "1", icon: <FaFile size={20} className="text-sky-500" /> },
-    { title: "Disbursed", value: "1", icon: <FaFile size={20} className="text-sky-500" /> },
-    { title: "New Leads", value: "1", icon: <FaFile size={20} className="text-sky-500" /> }
-  ].map(({ title, value, icon }, index) => (
-    <div key={index} className="h-[10vh] w-[99%] sm:w-[100%]  bg-white border shadow-lg rounded-md flex justify-between items-center p-4">
-      <div>
-        <h1 className="text-md text-gray-500">{title}</h1>
-        <h1 className="font-bold text-3xl">{value}</h1>
-      </div>
-      <div className="h-10 w-10 flex items-center justify-center rounded-full bg-blue-100">
-        {icon}
+        {/* Expenses Status */}
+        <div className="bg-white p-6 rounded-lg shadow w-full max-w-md mx-auto">
+          <h3 className="text-xl font-semibold mb-4">Expenses Status</h3>
+          <ResponsiveContainer width="100%" height={150}>
+            <LineChart data={data}>
+              <Line type="monotone" dataKey="sales" stroke="#ff7300" />
+              <XAxis dataKey="name" />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+          <p className="text-center text-green-500 font-semibold mt-4">On Track</p>
+        </div>
       </div>
     </div>
-  ))}
-</div>
-
-
-
-
+    </div>
+  );
+};
+const MetricCard = ({ title, value, icon }) => {
+  return (
+    <div className="bg-white w-full max-w-xs min-h-[14vh] rounded-lg shadow flex justify-around items-center p-4">
+      <div className="text-2xl text-gray-500">{icon}</div>
       <div>
-        <Tabledata />
+        <h3 className="text-[12px] font-semibold">{title}</h3>
+        <p className="text-xl font-semibold">{value}</p>
       </div>
     </div>
   );
 };
 
-export default Userform;
+export default Dashboard;

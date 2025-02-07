@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  Navigate,
+  Route
 } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import UploadCsv from "./UploadCsv";
@@ -14,7 +13,6 @@ import Board from "./Board";
 import AdminDashBoaard from "./Admindashboard";
 import ManageAll from "./ManageAll";
 import Eligibility from "./Eli";
-// import EMICalculator from "./EMICalculator"
 import EMICalculator from "./EmiCalculator";
 import CreatePartner from "./Create/Crerate_user";
 import CreateInd from "./Create/Create_ind";
@@ -22,6 +20,7 @@ import CreateManager from "./Create/Create_manager";
 import Profile from "./Profile/Profile";
 import LoginUserPage from "./CreateAuth/LoginInd";
 import LoginPartner from "./CreateAuth/LoginPartner";
+import LanderList from "./LanderList/LanderList"
 import { Toaster } from "react-hot-toast";
 
 const Dashboard = () => {
@@ -44,7 +43,7 @@ const Dashboard = () => {
 
   return (
     <Router>
-      <div className="flex ">
+      <div className="flex">
         {/* {isLoggedIn && <Sidebar isLoggedIn={isLoggedIn} onAuthToggle={handleAuthToggle} />} */}
         <Sidebar />
 
@@ -70,9 +69,8 @@ const Dashboard = () => {
             <Route path="/create_vis" element={<CreateInd />} />
             <Route path="/create_manager" element={<CreateManager />} />
             <Route path="/individual" element={<IndividualLead />} />
-
             <Route path="/profile" element={<Profile />} />
-
+            <Route path="/list" element={ <LanderList/> } />
             <Route path="/" element={<Loginpage />} />
           </Routes>
         </div>

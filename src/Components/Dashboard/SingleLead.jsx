@@ -12,13 +12,11 @@ const LeadForm = () => {
     salary: "",
     age: "",
     gender: "",
-    phone:""
+    phone: ""
   });
   const [userrole, setUserrole] = useState(null);
   const [user, setUser] = useState(null);
-  const [responsedata ,setResponsedata ] = useState("")
-  
-
+  const [responsedata, setResponsedata] = useState("");
 
   useEffect(() => {
     const getrole = Cookies.get("role");
@@ -38,111 +36,184 @@ const LeadForm = () => {
       uploaderId: user,
       ...formData,
     });
-    console.log(response, "Response");
-    alert(JSON.stringify(formData, null, 2));
-    setResponsedata(response.data)
+    setResponsedata(response.data);
+    setFormData("")
+    alert("Lead submitted successfully!");
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-[95vh] flex flex-col ml-0 sm:ml-[12%] items-center justify-center p-4">
       {userrole === "admin" || userrole === "DSA" ? (
-        <div className="flex space-x-2 absolute top-4 right-6">
-          <div className="sm:px-4 sm:py-2 py-1 h-7 sm:h-9 w-12 sm:w-16 bg-green-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-green-600">
-           <h6 className="text-sm text-center">Single</h6>
+        <div className="flex space-x-2 absolute top-4 right-4 z-10">
+          <div className="px-4 py-2 h-10 bg-green-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-green-600 transition duration-300">
+            <h6 className="text-sm">Single</h6>
           </div>
           <Link
             to="/uploadcsv"
-            className="sm:px-4 sm:py-2 py-1 h-7 sm:h-9 w-12 sm:w-16 bg-sky-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-sky-600"
+            className="px-4 py-2 h-10 bg-red-500 text-white font-semibold text-center rounded-md cursor-pointer hover:bg-red-700 transition duration-300"
           >
-           <h6 className="text-sm text-center">Bulk</h6>
+            <h6 className="text-sm">Bulk</h6>
           </Link>
         </div>
       ) : null}
 
-<div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
-  <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-    Single Lead Form
-  </h2>
-  <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {[
-      { label: "Name", type: "text", id: "name" },
-      { label: "Email", type: "email", id: "email" },
-      { label: "Pincode", type: "text", id: "pincode" },
-      { label: "Date of Birth", type: "date", id: "dob" },
-      { label: "Salary", type: "number", id: "salary" },
-      { label: "Age", type: "number", id: "age" },
-      { label: "Phone", type: "tel", id: "phone" },
-    ].map(({ label, type, id }) => (
-      <div key={id}>
-        <label htmlFor={id} className="block text-gray-700 font-semibold mb-1">
-          {label}
-        </label>
-        <input
-          type={type}
-          id={id}
-          name={id}
-          value={formData[id]}
-          onChange={handleChange}
-          placeholder={`Enter ${label.toLowerCase()}`}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-          required
-        />
-      </div>
-    ))}
+      <div className="bg-white shadow-lg rounded-lg p-3 w-full max-w-3xl">
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">
+          Single Lead Form
+        </h2>
 
-    {/* Salary Type Select Dropdown */}
-    <div>
-      <label htmlFor="salaryType" className="block text-gray-700 font-semibold mb-1">
-        Salary Type
-      </label>
-      <select
-        id="salaryType"
-        name="salaryType"
-        value={formData.salaryType}
-        onChange={handleChange}
-        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-        required
-      >
-        <option value="">Select Salary Type</option>
-        <option value="self-employed">Self-Employed</option>
-        <option value="salaried">Salaried</option>
-      </select>
-    </div>
-
-    {/* Gender Selection */}
-    <div className="md:col-span-2">
-      <label className="block text-gray-700 font-semibold mb-1">Gender</label>
-      <div className="flex space-x-4">
-        {["Male", "Female", "Other"].map((gender) => (
-          <div key={gender} className="flex items-center">
-            <input
-              type="radio"
-              id={gender.toLowerCase()}
-              name="gender"
-              value={gender}
-              onChange={handleChange}
-              checked={formData.gender === gender}
-              className="h-4 w-4 text-blue-500"
-            />
-            <label htmlFor={gender.toLowerCase()} className="ml-2">
-              {gender}
-            </label>
+        <form onSubmit={handleSubmit} className="w-full flex flex-col space-y-6">
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <label htmlFor="name" className="block text-gray-700 font-semibold mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
 
-    <div className="md:col-span-2">
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 transition duration-300"
-      >
-        Submit Form
-      </button>
-    </div>
-  </form>
+          {/* Pincode and Date of Birth in one row */}
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <label htmlFor="pincode" className="block text-gray-700 font-semibold mb-2">
+                Pincode
+              </label>
+              <input
+                type="text"
+                id="pincode"
+                name="pincode"
+                maxLength={6}
+                value={formData.pincode}
+                onChange={handleChange}
+                placeholder="Enter your pincode"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label htmlFor="dob" className="block text-gray-700 font-semibold mb-2">
+                Date of Birth
+              </label>
+              <input
+                type="date"
+                id="dob"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Salary and Age in one row */}
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <label htmlFor="salary" className="block text-gray-700 font-semibold mb-2">
+                Salary
+              </label>
+              <input
+                type="number"
+                id="salary"
+                name="salary"
+                value={formData.salary}
+                onChange={handleChange}
+                placeholder="Enter your salary"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label htmlFor="age" className="block text-gray-700 font-semibold mb-2">
+                Age
+              </label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                placeholder="Enter your age"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Phone in one row */}
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <label htmlFor="phone" className="block text-gray-700 font-semibold mb-2">
+                Phone
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                maxLength={10}
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Enter your phone number"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+  <label htmlFor="gender" className="block text-gray-700 font-semibold mb-2">
+    Gender
+  </label>
+  <select
+    id="gender"
+    name="gender"
+    value={formData.gender}
+    onChange={handleChange}
+    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+    required
+  >
+    <option value="">Select Gender</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+  </select>
 </div>
 
+          </div>
+
+          {/* Submit Button */}
+          <div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-semibold py-3 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 transition duration-300"
+            >
+              Submit Form
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

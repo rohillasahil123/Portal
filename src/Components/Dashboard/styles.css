@@ -1,0 +1,86 @@
+/* CSS file (e.g., styles.css) */
+
+/* Common size for all cards */
+
+  
+  /* General styling for the dashboard */
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom right, #e0f7fa, #ffffff);
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, p {
+    margin: 0;
+  }
+  
+  /* Header styling */
+  header {
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  
+  header p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  header h1.date {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #888;
+  }
+  
+  /* Card styling */
+  .card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card h1 {
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .card .icon {
+    background-color: #e0f2f1;
+    padding: 10px;
+    border-radius: 50%;
+  }
+  
+  .card .icon svg {
+    color: #26a69a;
+  }
+  
+  /* Chart section styling */
+  .chart-section {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  

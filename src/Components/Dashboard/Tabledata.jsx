@@ -42,8 +42,8 @@ const App = () => {
   };
 
   return (
-    <div className="p-4">
-    <h1 className="text-2xl font-bold mb-4">Latest Leads</h1>
+    <div className="p-4 text-[12px] from-neutral-400">
+    <h1 className="text-2xl font-bold mb-4">Latest user</h1>
     <div className="overflow-x-auto">
       <table className="table-auto w-full border-collapse border border-gray-300 min-w-[600px]">
         <thead className="bg-gray-200">

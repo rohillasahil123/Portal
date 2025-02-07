@@ -119,9 +119,9 @@ const MyLeads = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="w-full p-4">
+    <div className="w-[82%] p-4 ml-[20%]">
       <h2 className="text-2xl font-bold mb-4">My Leads</h2>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between w-[87%] gap-4 mb-4">
         <input
           type="text"
           placeholder="Search leads..."
@@ -136,18 +136,7 @@ const MyLeads = () => {
         >
           Download CSV
         </button>
-        <select
-          value={leadsPerPage}
-          onChange={(e) => {
-            setLeadsPerPage(Number(e.target.value));
-            setCurrentPage(1);
-          }}
-          className="border border-gray-300 rounded px-4 py-2"
-        >
-          <option value={10}>10</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
+       
       </div>
 
       <div className="flex sm:flex-row gap-2 mb-4">
@@ -169,11 +158,21 @@ const MyLeads = () => {
         >
           Search
         </button>
+         <select
+          value={leadsPerPage}
+          onChange={(e) => {
+            setLeadsPerPage(Number(e.target.value));
+            setCurrentPage(1);}}
+          className="border border-gray-300 rounded px-4 py-2">
+          <option value={10}>10</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
       </div>
 
       {isLeadsValid ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
+        <div className="overflow-x-auto ml-1 ">
+          <table className="w-[90%] bg-white border border-gray-200">
             <thead>
               <tr>
                 <th className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
@@ -193,7 +192,8 @@ const MyLeads = () => {
                       key !== "dob" && 
                       key !== "salary" && 
                       key !== "gender" && 
-                      key !== "salaryType"
+                      key !== "salaryType" &&
+                      key !== "Index"
                   )
                   .map((key) => (
                     <th
@@ -228,7 +228,8 @@ const MyLeads = () => {
                         key !== "dob" && 
                         key !== "salary" && 
                         key !== "gender" && 
-                        key !== "salaryType"
+                        key !== "salaryType" &&
+                        key !== "Index"
                     )
                     .map(([_, value], idx) => (
                       <td

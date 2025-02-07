@@ -36,85 +36,44 @@ const Dashboard = () => {
 
   const menuItems = [
     { path: "/board", label: "Board", showFor: ["admin", "DSA", "individual"] },
-    {
-      path: "/individual",
-      label: "Create Lead",
-      showFor: ["admin", "DSA", "individual"],
-    },
-    {
-      path: "/eli",
-      label: "Eligibility Checker",
-      showFor: ["admin", "DSA", "individual"],
-    },
-    {
-      path: "/EmiCalculator",
-      label: "EMI Calculator",
-      showFor: ["admin", "DSA", "individual"],
-    },
-    {
-      path: "/myleads",
-      label: "My Leads",
-      showFor: ["admin", "individual", "DSA"],
-    },
+    { path: "/individual", label: "Create Lead", showFor: ["admin", "DSA", "individual"] },
+    { path: "/eli", label: "Eligibility Checker", showFor: ["admin", "DSA", "individual"] },
+    { path: "/EmiCalculator", label: "EMI Calculator", showFor: ["admin", "DSA", "individual"] },
+    { path: "/myleads", label: "My Leads", showFor: ["admin", "individual", "DSA"] },
     { path: "/admin", label: "Admin Dashboard", showFor: ["admin"] },
-    {
-      path: "/manage/Partner",
-      label: "Manage All Partners",
-      showFor: ["admin"],
-    },
-    { path: "/profile", label: "Profile", showFor: ["admin", "individual"] },
+    { path: "/manage/Partner", label: "Manage Partners", showFor: ["admin"] },
+    { path: "/profile", label: "Profile", showFor: ["admin", "individual" , "DSA"] },
   ];
 
   if (!isLoggedIn) return null;
 
   return (
-    <div className={`shadow-2xl transition-all duration-300 ease-in-out ${isOpen ? "bg-gray-800 md:bg-transparent border-none" : "border-l-2"}`}>
-
-      {/* Menu Button - Hidden When Open */}
-      <button
-        className={`p-3 bg-gray-800 text-white rounded-md m-2 md:hidden ${isOpen ? "hidden" : ""}`}
-        onClick={() => setIsOpen(true)}
-      >
-        <FiMenu size={24} />
-      </button>
-
-      {/* Sidebar */}
+    <div className="h-screen fixed flex text-[12px] font-semibold">
       <div
-        className={`fixed md:relative top-0 left-0 h-full w-57 text-blue-600 md:translate-x-0 transform ${
-          isOpen ? "translate-x-0 bg-gray-50" : "-translate-x-full bg-transparent"
-        } transition-transform duration-300 ease-in-out md:flex md:flex-col`}
+        className={`fixed md:relative top-0 left-0 h-full w-62 bg-white shadow-xl border-r transition-all ease-in-out transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        }`}
       >
-        {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-black md:hidden"
+          className="absolute top-4 right-4 text-gray-700 md:hidden"
           onClick={() => setIsOpen(false)}
         >
-          <FiX size={24} />
+          <FiX size={24} /> 
         </button>
 
-        {/* Logout Button */}
-        <div className="flex p-6">
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
+        <h1 className="text-2xl font-bold text-center mt-6 text-gray-800">
+          Dashboard
+        </h1>
 
-        {/* Dashboard Title */}
-        <h1 className="text-2xl font-bold mb-6 ml-3">Dashboard</h1>
-        
-        {/* Navigation Links */}
-        <nav>
-          <ul>
+        <nav className="mt-8 px-4">
+          <ul className="space-y-1">
             {menuItems
               .filter((item) => item.showFor.includes(role))
               .map((item, i) => (
-                <li key={i} className="mb-4 ml-3">
+                <li key={i}>
                   <Link
                     to={item.path}
-                    className="hover:text-blue-400"
+                    className="block py-2 px-4 rounded-lg text-md font-semibold hover:bg-gradient-to-r from-blue-400 to-purple-500 hover:text-white transition-all duration-300 ease-in-out"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.label}
@@ -123,7 +82,26 @@ const Dashboard = () => {
               ))}
           </ul>
         </nav>
+
+        {/* Logout Button */}
+        <div className="absolute bottom-6 right-4 w-full flex justify-center">
+          <button
+            onClick={handleLogout}
+            className="px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-300 ease-in-out"
+          >
+            Logout
+          </button>
+        </div>
       </div>
+
+      {/* Menu Button for Mobile */}
+      <button
+        className="p-1 h-[12vh] bg-gray-800 text-white rounded-md m-2 md:hidden"
+        onClick={() => setIsOpen(true)}
+      >
+        <FiMenu size={24} />
+      </button>
+
     </div>
   );
 };
