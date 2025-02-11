@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 
 const MyLeads = () => {
@@ -8,241 +9,164 @@ const MyLeads = () => {
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [leadsPerPage, setLeadsPerPage] = useState(10);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [approve, setApprove] = useState(null);
 
-  useEffect(() => {
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const leadsPerPage = 40;
+
+
+
+
+
+
+
+ const fetchLeads = async (page = 1) => {
+  setLoading(true);
+  try {
     const uploaderId = Cookies.get("userId");
-    console.log(uploaderId, "1");
     if (!uploaderId) {
-      setError("Uploader ID not found in cookies");
-      setLoading(false); 
+      setError("User ID not found.");
+      setLoading(false);
       return;
     }
-    const fetchLeads = async () => {
-      setLoading(true); 
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/get-leads-by-uploader-id",
-          { uploaderId },
-          { headers: { "Content-Type": "application/json" } }
-        );
-        console.log(response, "2");
+
+    const response = await axios.get("http://localhost:3000/get-leads", {
+      headers: { "Content-Type": "application/json" },
+      params: { uploaderId, page, limit: leadsPerPage },
+    });
+    const leadsData = response?.data?.data?.map(lead => ({
+      ...lead,
+      approvalStatus: lead.accounts?.some(acc => acc.status === "Accepted") ? "Accepted" : "Rejected"
+    })) || [];
+
+    const approvalStatuses = leadsData.map(lead => lead.approvalStatus);
+
+    setLeads(leadsData);
+    setFilteredLeads(leadsData);
+    setTotalPages(response?.data?.totalPages || 0);
+    setApprove(approvalStatuses);
+
+    setError(null);
+  } catch (err) {
+    setError(err?.response?.data?.message || "Failed to fetch leads.");
+  } finally {
+    setLoading(false);
+  }
+};
+
   
-        const leadsData = response?.data?.leads || [];
-        console.log(leadsData, "tyu1");
   
-        const updatedLeads = leadsData.map((lead) => ({
-          ...lead,
-          pending: lead.pending ? lead.pending.toString() : "false",
-        }));
-        setLeads(updatedLeads);
-        setFilteredLeads(updatedLeads);
-      } catch (err) {
-        console.error("Error fetching leads:", err);
-        setError(
-          err?.response?.data?.message || "Failed to fetch leads. Please try again later."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchLeads();
-  }, []); 
-  
+
   useEffect(() => {
-    if (Array.isArray(leads) && searchTerm) {
-      const filtered = leads.filter((lead) =>
-        Object.values(lead).some((value) => {
-          if (value && typeof value === "string") {
-            return value.toLowerCase().includes(searchTerm.toLowerCase());
-          }
-          if (value && typeof value === "number") {
-            return value.toString().includes(searchTerm);
-          }
-          return false;
-        })
-      );
-      setFilteredLeads(filtered);
+    fetchLeads(currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    const lowerSearch = searchTerm.toLowerCase();
+    const filtered = leads.filter(
+      (lead) =>
+        lead.name?.toLowerCase().includes(lowerSearch) ||
+        lead.phone?.toLowerCase().includes(lowerSearch) ||
+        lead.email?.toLowerCase().includes(lowerSearch) ||
+        lead.status?.toLowerCase().includes(lowerSearch)
+    );
+    setFilteredLeads(filtered);
+  }, [searchTerm, leads]);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this Lead?")) return;
+    try {
+      const response = await axios.delete(`http://localhost:3000/delete-lead/${id}`);
+      if (response.data.message === "success") {
+        setLeads((prevLeads) => prevLeads.filter((lead) => lead._id !== id));
+        toast.success("Lead deleted successfully");
+      } else {
+        throw new Error(response.data.message || "Failed to delete lead");
+      }
+    } catch (error) {
+      toast.error("Failed to delete lead. Please try again.");
     }
-  }, [leads, searchTerm]); 
+  };
 
-  const handleDateSearch = () => {
-    if (startDate && endDate) {
-      const filtered = leads.filter((lead) => {
-        const leadDate = new Date(lead.date);
-        return leadDate >= new Date(startDate) && leadDate <= new Date(endDate);
-      });
-      setFilteredLeads(filtered);
+  const handleDownloadCSV = () => {
+    if (filteredLeads.length === 0) {
+      toast.error("No leads available to download.");
+      return;
     }
+
+    const headers = ["Name", "Phone", "Email", "Status"];
+    const csvRows = [
+      headers.join(","),
+      ...filteredLeads.map((lead) =>
+        [lead.name || "N/A", lead.phone || "N/A", lead.email || "N/A", lead.status || "N/A"].join(",")
+      ),
+    ];
+
+    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "leads.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
-  const indexOfLastLead = currentPage * leadsPerPage;
-  const indexOfFirstLead = indexOfLastLead - leadsPerPage;
-  const currentLeads = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
-  const isLeadsValid = filteredLeads.length > 0;
-
-  const downloadCSV = () => {
-    if (!isLeadsValid) return;
-    
-    const headers = Object.keys(filteredLeads[0])
-      .filter((key) => key !== "_id" && key !== "v account" && key !== "uploaderId")
-      .join(",");
-    const rows = filteredLeads
-      .map((lead) =>
-        Object.entries(lead)
-          .filter(([key]) => key !== "_id" && key !== "v account" && key !== "uploaderId")
-          .map(([_, value]) => `"${value}"`)
-          .join(",")
-      )
-      .join("\n");
-
-    const csvContent = `${headers}\n${rows}`;
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "leads.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const deleteLead = (index) => {
-    const updatedLeads = filteredLeads.filter((_, i) => i !== index);
-    setFilteredLeads(updatedLeads);
-  };
-
-  if (loading) return <p>Loading leads...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center flex-col items-center h-screen">
+        <div className="w-16 h-16 border-4 border-blue-500 border-dotted rounded-full animate-spin"></div>
+        <h1 className="font-semibold text-xl">Loading data...</h1>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-[82%] p-4 ml-[20%]">
+    <div className="w-[82%] p-4 ml-[15%]">
       <h2 className="text-2xl font-bold mb-4">My Leads</h2>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between w-[87%] gap-4 mb-4">
+      <div className="flex justify-between">
         <input
           type="text"
           placeholder="Search leads..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 w-[90%] md:max-w-md"
+          className="border border-gray-300 rounded px-4 py-2 w-full max-w-md mb-4"
         />
         <button
-          className="bg-white text-black px-4 border py-2 rounded hover:bg-gray-200 disabled:bg-gray-400"
-          onClick={downloadCSV}
-          disabled={!isLeadsValid}
+          className="bg-white mb-2 border py-1 rounded-md font-semibold px-2 hover:bg-gray-200 shadow-md"
+          onClick={handleDownloadCSV}
         >
           Download CSV
         </button>
-       
       </div>
 
-      <div className="flex sm:flex-row gap-2 mb-4">
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 w-full sm:w-auto"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 w-full sm:w-auto"
-        />
-        <button
-          className="hover:bg-gray-200 text-black  border  px-4 py-2 rounded bg-white"
-          onClick={handleDateSearch}
-        >
-          Search
-        </button>
-         <select
-          value={leadsPerPage}
-          onChange={(e) => {
-            setLeadsPerPage(Number(e.target.value));
-            setCurrentPage(1);}}
-          className="border border-gray-300 rounded px-4 py-2">
-          <option value={10}>10</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
-      </div>
-
-      {isLeadsValid ? (
-        <div className="overflow-x-auto ml-1 ">
-          <table className="w-[90%] bg-white border border-gray-200">
+      {filteredLeads.length > 0 ? (
+        <div className="border border-gray-300 rounded">
+          <table className="w-full border-collapse">
             <thead>
-              <tr>
-                <th className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
-                  Index
-                </th>
-                {Object.keys(filteredLeads[0])
-                  .filter(
-                    (key) =>
-                      key !== "_id" &&
-                      key !== "accounts" &&
-                      key !== "uploaderId" &&
-                      key !== "__v" &&
-                      key !== "index" &&
-                      key !== "email" && 
-                      key !== "age" &&
-                      key !== "pincode" && 
-                      key !== "dob" && 
-                      key !== "salary" && 
-                      key !== "gender" && 
-                      key !== "salaryType" &&
-                      key !== "Index"
-                  )
-                  .map((key) => (
-                    <th
-                      key={key}
-                      className="px-4 py-2 border border-gray-300 bg-gray-100 text-left"
-                    >
-                      {key}
-                    </th>
-                  ))}
-                <th className="px-4 py-2 border border-gray-300 bg-gray-100 text-left">
-                  Action
-                </th>
+              <tr className="bg-gray-200">
+                <th className="border p-2">#</th>
+                <th className="border p-2">Name</th>
+                <th className="border p-2">Phone</th>
+                <th className="border p-2">Email</th>
+                <th className="border p-2">Status</th>
+                <th className="border p-2">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {currentLeads.map((lead, index) => (
-                <tr key={index}>
-                  <td className="px-4 py-2 border text-[12px] border-gray-300">
-                    {index + 1 + indexOfFirstLead}
-                  </td>
-                  {Object.entries(lead)
-                    .filter(
-                      ([key]) =>
-                        key !== "_id" &&
-                        key !== "accounts" &&
-                        key !== "uploaderId" &&
-                        key !== "__v" &&
-                        key !== "index" &&
-                        key !== "email" && 
-                        key !== "age" &&
-                        key !== "pincode" && 
-                        key !== "dob" && 
-                        key !== "salary" && 
-                        key !== "gender" && 
-                        key !== "salaryType" &&
-                        key !== "Index"
-                    )
-                    .map(([_, value], idx) => (
-                      <td
-                        key={idx}
-                        className="px-4 py-2 border border-gray-300"
-                      >
-                        {value || "N/A"}
-                      </td>
-                    ))}
-                  <td className="px-4 py-2 border border-gray-300">
+              {filteredLeads.map((lead, index) => (
+                <tr key={lead._id} className="border-t text-center">
+                  <td className="border p-2">{(currentPage - 1) * leadsPerPage + index + 1}</td>
+                  <td className="border p-2">{lead.name || "N/A"}</td>
+                  <td className="border p-2">{lead.phone || "N/A"}</td>
+                  <td className="border p-2">{lead.email || "N/A"}</td>
+                  <td className="border p-2">{lead.approve || "N/A"}</td>
+                  <td className="border p-2">
                     <button
-                      className="bg-white text-black px-2 py-1 rounded hover:bg-gray-200"
-                      onClick={() => deleteLead(index)}
+                      className="bg-white text-black shadow-md hover:bg-gray-200 px-2 py-1 rounded"
+                      onClick={() => handleDelete(lead._id)}
                     >
                       Delete
                     </button>
@@ -253,8 +177,29 @@ const MyLeads = () => {
           </table>
         </div>
       ) : (
-        <p>No leads to display.</p>
+        <p>No leads found.</p>
       )}
+
+  
+      <div className="flex justify-center items-center mt-4">
+        <button
+          className="px-4 py-2 mx-2 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span className="font-bold">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          className="px-4 py-2 mx-2 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

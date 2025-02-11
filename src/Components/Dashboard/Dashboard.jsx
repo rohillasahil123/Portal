@@ -18,6 +18,8 @@ import LoginUserPage from "./CreateAuth/LoginInd";
 import LoginPartner from "./CreateAuth/LoginPartner";
 import LenderList from "./LenderList/LenderList";
 import { Toaster } from "react-hot-toast";
+import Deleteilist from "./Delete/Deleteilist";
+import Protect from "../Protetcted/Protect";
 
 const Dashboard = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,7 +42,6 @@ const Dashboard = () => {
   return (
     <Router>
       <div className="flex">
-        {/* {isLoggedIn && <Sidebar isLoggedIn={isLoggedIn} onAuthToggle={handleAuthToggle} />} */}
         <Sidebar />
 
         <div
@@ -50,20 +51,94 @@ const Dashboard = () => {
         >
           <Routes>
             <Route path="/board" element={<Board />} />
-            <Route path="/uploadcsv" element={<UploadCsv onUpload={handleUpload} />}/>
+            <Route
+              path="/uploadcsv"
+              element={<UploadCsv onUpload={handleUpload} />}
+            />
             <Route path="/myleads" element={<MyLeads leads={leads} />} />
-            <Route path="/admin" element={<AdminDashBoaard />} />
-            <Route path="/manage/partner" element={<ManageAll />} />
+            <Route
+              path="/admin"
+              element={
+                <Protect>
+                  <AdminDashBoaard />
+                </Protect>
+              }
+            />
+            <Route
+              path="/manage/partner"
+              element={
+                <Protect>
+                  <ManageAll />
+                </Protect>
+              }
+            />
             <Route path="/EmiCalculator" element={<EMICalculator />} />
-            <Route path="/eli" element={<Eligibility />} />
+            <Route
+              path="/eli"
+              element={
+                <Protect>
+                  <Eligibility />
+                </Protect>
+              }
+            />
             <Route path="/loginInd" element={<LoginUserPage />} />
             <Route path="/loginPartner" element={<LoginPartner />} />
-            <Route path="/create_user" element={<CreatePartner />} />
-            <Route path="/create_vis" element={<CreateInd />} />
-            <Route path="/create_manager" element={<CreateManager />} />
-            <Route path="/individual" element={<IndividualLead />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/list" element={<LenderList />} />
+            <Route
+              path="/create_user"
+              element={
+                <Protect>
+                  <CreatePartner />
+                </Protect>
+              }
+            />
+            <Route
+              path="/create_ind"
+              element={
+                <Protect>
+                  <CreateInd />
+                </Protect>
+              }
+            />
+            <Route
+              path="/create_manager"
+              element={
+                <Protect>
+                  <CreateManager />
+                </Protect>
+              }
+            />
+            <Route
+              path="/individual"
+              element={
+                <Protect>
+                  <IndividualLead />
+                </Protect>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <Protect>
+                  <Profile />
+                </Protect>
+              }
+            />
+            <Route
+              path="/list"
+              element={
+                <Protect>
+                  <LenderList />
+                </Protect>
+              }
+            />
+            <Route
+              path="/deleteUser"
+              element={
+                <Protect>
+                  <Deleteilist />
+                </Protect>
+              }
+            />
             <Route path="/" element={<Loginpage />} />
           </Routes>
         </div>

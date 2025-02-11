@@ -1,46 +1,51 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios"
-import Cookies from 'js-cookie'
+import React, { useContext, useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { useNavigate , Link } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import { ThemeContext } from "../../../Context/Context"
 
 const LoginUserPage = () => {
+  const { setFetchTrigger } = useContext(ThemeContext); 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const navigate= useNavigate()
-
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  useEffect(()=>{
-    console.log("tahdksgfhwjd")
-  })
-
-
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-   const response =await axios.post("http://localhost:3000/login/partner", {
-      email : formData.email,
-      password : formData.password
-   })
-   if(response.status === 200 ){
-    const role = response.data.role
-    Cookies.set("role", role, {
-            secure: true,
-            sameSite: "Strict",
-            expires: 1, 
-          });
-          toast.success("login")
-          navigate("/board")
-    console.log(response.data)
-   }
+    try {
+      const response = await axios.post("http://localhost:3000/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log(response.data);
+      if (response.data.message === "success") {
+        const token = response.data.token;
+        const role = "DSA";
+        const userId = response.data.partner.id;
+
+        Cookies.set("role", role, { secure: true, sameSite: "Strict", expires: 1 });
+        Cookies.set("userId", userId, { secure: true, sameSite: "Strict", expires: 1 });
+        Cookies.set("userToken", token, { secure: true, sameSite: "Strict", expires: 1 });
+
+        toast.success("Login successful!");
+        setFetchTrigger(true);
+
+        navigate("/board");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Invalid credentials!");
+    }
   };
 
   return (

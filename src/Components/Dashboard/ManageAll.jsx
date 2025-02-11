@@ -1,40 +1,44 @@
 import React, { useState, useContext, useEffect } from "react";
 import toast from "react-hot-toast";
 import { ThemeContext } from "../../Context/Context";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const PartnerTable = () => {
   const PartnerData = useContext(ThemeContext);
-  const [dataPartner, setDataPartner] = useState(null); // Initialize as null
-
-  useEffect(() => {
-    if (PartnerData && PartnerData.allData && PartnerData.allData.partners) {
-      setDataPartner(PartnerData.allData);
-      console.log(dataPartner)
-    }
-  }, [PartnerData]);
-
+  const [dataPartner, setDataPartner] = useState([]);
   const [buttonStates, setButtonStates] = useState({});
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    if (PartnerData?.partnerShow) {
+      setDataPartner(PartnerData.partnerShow);
+    }
+  }, [PartnerData]);
 
   const handleEdit = (id) => {
     alert("Edit functionality is not implemented yet.");
   };
 
-  const handleUpgrade = (id) => {
-    setButtonStates((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-    toast.success("Upgrade");
-  };
+  const handleDelete = async (id) => {
+    if (!id) {
+      toast.error("Invalid Partner ID");
+      return;
+    }
 
-  const handleDelete = (id) => {
-    if (dataPartner && dataPartner.partners) {
-      const updatedPartners = dataPartner.partners.filter(
-        (partner) => partner.id !== id
-      );
-      setDataPartner({ ...dataPartner, partners: updatedPartners });
-      toast.success("Partner deleted");
+    const confirmed = window.confirm("Are you sure you want to delete this partner?");
+    if (!confirmed) return;
+
+    try {
+      const response = await axios.delete(`http://localhost:3000/delete-profile/${id}`);
+      if (response.data.message === "success") {
+        setDataPartner((prevState) => prevState.filter((partner) => partner._id !== id));
+        toast.success("Partner deleted successfully");
+      } else {
+        throw new Error(response.data.message || "Failed to delete partner");
+      }
+    } catch (error) {
+      toast.error("Failed to delete partner. Please try again.");
     }
   };
 
@@ -63,46 +67,28 @@ const PartnerTable = () => {
             <th className="px-4 py-2">Assigned</th>
             <th className="px-4 py-2">Phone</th>
             <th className="px-4 py-2">Action</th>
-            <th className="px-4 py-2">Upgrade</th>
           </tr>
         </thead>
         <tbody className="text-center">
-          {dataPartner && dataPartner.partners && dataPartner.partners.slice(0, itemsPerPage).map((partner) => (
-            <tr key={partner.id} className="ml-6 border-b">
+          {dataPartner.map((partner) => (
+            <tr key={partner._id}>
               <td className="px-4 py-2">{partner.name}</td>
               <td className="px-4 py-2">{partner.desinationType}</td>
               <td className="px-4 py-2">{partner.partnerStatus}</td>
               <td className="px-4 py-2">{partner.phone}</td>
               <td className="px-4 py-2 space-x-2">
                 <button
-                  onClick={() => handleEdit(partner.id)}
-                  className="bg-white text-black border hover:bg-gray-300 shadow-md px-2 py-1 rounded"
+                  onClick={() => handleEdit(partner._id)}
+                  className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-700"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(partner.id)}
-                  className="bg-white text-black border shadow-md hover:bg-gray-300 px-2 py-1 rounded"
+                  onClick={() => handleDelete(partner._id)}
+                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
                 >
                   Delete
                 </button>
-              </td>
-              <td>
-                {buttonStates[partner.id] ? (
-                  <button
-                    onClick={() => handleUpgrade(partner.id)}
-                    className="bg-gray-500 shadow-sm text-white px-2 py-1 rounded"
-                  >
-                    {partner.desinationType}
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleUpgrade(partner.id)}
-                    className="bg-white text-black border hover:bg-gray-300 shadow-sm px-2 py-1 rounded"
-                  >
-                 {partner.desinationType}
-                  </button>
-                )}
               </td>
             </tr>
           ))}

@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useContext } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { ThemeContext } from "../../Context/Context"
 
 const LeadForm = () => {
+  const { setFetchTrigger } = useContext(ThemeContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,6 +19,7 @@ const LeadForm = () => {
   const [userrole, setUserrole] = useState(null);
   const [user, setUser] = useState(null);
   const [responsedata, setResponsedata] = useState("");
+const [leadId , setLeadId] = useState("")
 
   useEffect(() => {
     const getrole = Cookies.get("role");
@@ -32,14 +35,41 @@ const LeadForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post("http://localhost:3000/singleUserLead", {
-      uploaderId: user,
-      ...formData,
-    });
-    setResponsedata(response.data);
-    setFormData("")
-    alert("Lead submitted successfully!");
+    try {
+      const response = await axios.post("http://localhost:3000/singleUserLead", {
+        uploaderId: user,
+        ...formData,
+      });
+  console.log(response)
+      if (response.data.message === "success") {
+        const newLeadId = response.data.lead.id;
+        setLeadId(newLeadId);
+        Cookies.set("leadId", newLeadId, {
+          secure: true,
+          sameSite: "Strict",
+          expires: 1,
+        });
+  
+        console.log("Lead ID:", newLeadId);
+      }
+  
+      setResponsedata(response.data);
+      setFormData({
+        name: "",
+        email: "",
+        pincode: "",
+        dob: "",
+        salary: "",
+        age: "",
+        gender: "",
+        phone: "",
+      });
+      setFetchTrigger(true);
+    } catch (error) {
+      console.error("Error submitting lead form:", error);
+    }
   };
+  
 
   return (
     <div className="min-h-[95vh] flex flex-col ml-[14%] items-center justify-center p-4">
@@ -195,9 +225,9 @@ const LeadForm = () => {
     required
   >
     <option value="">Select Gender</option>
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-    <option value="other">Other</option>
+    <option value="MALE">Male</option>
+    <option value="FEMALE">Female</option>
+    <option value="OTHER">Other</option>
   </select>
 </div>
 

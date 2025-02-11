@@ -6,10 +6,13 @@ const App = () => {
   const lenderdata = useContext(ThemeContext);
 
   useEffect(() => {
+    console.log("Context Data:", lenderdata);
     if (lenderdata && lenderdata.allData) {
       setLender(lenderdata.allData);
+      console.log("Setting Lender Data:", lenderdata.allData);
     }
   }, [lenderdata]); 
+   
 
   const handleEdit = (id) => {
     console.log("Edit item with id:", id);
@@ -42,9 +45,7 @@ const App = () => {
               <th className="border border-gray-300 px-4 py-2 text-sm md:text-base">
                 Created At
               </th>
-              <th className="border border-gray-300 px-4 py-2 text-sm md:text-base">
-                Action
-              </th>
+          
             </tr>
           </thead>
           <tbody>
@@ -63,20 +64,7 @@ const App = () => {
                   <td className="border border-gray-300 px-2 py-1">
                     {item.createdAt}
                   </td>
-                  <td className="border border-gray-300 px-2 py-1">
-                    <button
-                      className="bg-blue-500 text-white text-xs md:text-sm px-2 py-1 rounded mx-1 hover:bg-blue-600"
-                      onClick={() => handleEdit(item.id)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="bg-red-500 text-white text-xs md:text-sm px-2 py-1 rounded mx-1 hover:bg-red-600"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
+           
                 </tr>
               ))
             ) : (
