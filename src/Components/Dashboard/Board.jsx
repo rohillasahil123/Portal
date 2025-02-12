@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { ThemeContext } from "../../Context/Context"
+import { ThemeContext } from "../../Context/Context";
 import {
   LineChart,
   Line,
@@ -12,17 +12,16 @@ import {
 import { GiCrossMark } from "react-icons/gi";
 import { FaUser, FaDollarSign, FaUsers, FaCheckCircle } from "react-icons/fa";
 import Tabledata from "./Tabledata";
+import bgImage from "../../assets/bg.jpg"
 
 const Dashboard = () => {
-  const { user,leads, progress, approve, reject, success , setFetchTrigger } = useContext(ThemeContext)
+  const { user, leads, progress, approve, reject, setFetchTrigger } =
+    useContext(ThemeContext);
 
-  useEffect(()=>{
-    setFetchTrigger(true)
-  })
- 
+  useEffect(() => {
+    setFetchTrigger(true);
+  }, [setFetchTrigger]);
 
-
- 
   const data = [
     { name: "Jan", sales: leads },
     { name: "Feb", sales: leads },
@@ -39,13 +38,18 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="p-8 bg-gray-100 ml-0 sm:ml-[12%] min-h-screen">
+    <div
+      className="p-8 min-h-screen bg-cover bg-center bg-no-repeat ml-0 sm:ml-[12%]"
+      style={{
+        backgroundImage:  `url(${bgImage})`,
+      }}
+    >
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-4 mb-8">
-        <MetricCard title="Total Leads" value= {leads} icon={<FaUsers />} />
+        <MetricCard title="Total Leads" value={leads} icon={<FaUsers />} />
         <MetricCard title="Progress" value={progress} icon={<FaDollarSign />} />
         <MetricCard title="Approval" value={approve} icon={<FaCheckCircle />} />
         <MetricCard title="Rejected" value={reject} icon={<GiCrossMark />} />
-        <MetricCard title="Total User " value={user} icon={<FaUser />} />
+        <MetricCard title="Total Users" value={user} icon={<FaUser />} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:overflow-hidden">
@@ -62,14 +66,11 @@ const Dashboard = () => {
           </ResponsiveContainer>
         </div>
 
-
         <div className="flex flex-row sm:flex-col text-[12px] gap-6">
           <div className="bg-white text-black p-6 rounded-lg shadow-md sm:w-[65%] mx-auto">
             <h3 className="text-xl font-semibold mb-4">Total Leads</h3>
             <p className="text-4xl font-bold">{leads}</p>
             <ul className="mt-4 space-y-1">
-              {/* <li>Disbursed in % = {success}</li>
-              <li>In progress = {progress}</li> */}
               <li>Rejected Leads = {reject}</li>
             </ul>
           </div>
@@ -83,7 +84,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
 
       <div className="flex flex-col lg:flex-row gap-6 px-4 w-[100%]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 w-[100%]">
@@ -100,7 +100,9 @@ const Dashboard = () => {
                 <Tooltip />
               </LineChart>
             </ResponsiveContainer>
-            <p className="text-center text-green-500 font-semibold mt-4">On Track</p>
+            <p className="text-center text-green-500 font-semibold mt-4">
+              On Track
+            </p>
           </div>
         </div>
       </div>
