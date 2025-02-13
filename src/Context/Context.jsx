@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { FestivalTwoTone } from "@mui/icons-material";
 
 export const ThemeContext = createContext(null);
 
@@ -13,7 +14,7 @@ export const ThemeProvider = ({ children }) => {
   const [reject, setReject] = useState(null);
   const [progress, setProgress] = useState(null);
   const [userId, setUserId] = useState(Cookies.get("userId"));
-  const [fetchTrigger, setFetchTrigger] = useState(false);
+  const [fetchTrigger, setFetchTrigger] = useState(true);
   const [adminSuccess, setAdminSuccess] = useState(null);
   const [adminRejected , setAdminRejected] = useState(null)
   const [partnerShow, setPartnerShow] = useState(null);
@@ -38,22 +39,23 @@ export const ThemeProvider = ({ children }) => {
       const response = await axios.post("http://localhost:3000/get-leads-by-uploader-id", {
         uploaderId: userId,
       });
-
       setLeads(response.data.totalLeads);
       setUser(response.data.totalUsers);
       setApprove(response.data.approvedUsers);
       setReject(response.data.rejectedUsers);
       setProgress(response.data.processingLeads);
-      setFetchTrigger(false);
     } catch (err) {
       console.error("Error fetching leads:", err);
     }
   };
-
  
-  useEffect(() => {
-    getData();
-  }, []);
+  useEffect(() => {  
+    const fetchData = async () => {
+      await fetchLeads();
+      await getData();
+    }
+    fetchData();
+  }, [fetchTrigger]); 
 
  
   useEffect(() => {
@@ -62,22 +64,13 @@ export const ThemeProvider = ({ children }) => {
 
  
   useEffect(() => {
-    const interval = setInterval(() => {
       const newUserId = Cookies.get("userId");
       if (newUserId !== userId) {
         setUserId(newUserId);
       }
-    }, 1000);
-    
-    return () => clearInterval(interval);
   }, [userId]);
 
- 
-  useEffect(() => {
-    if (fetchTrigger) {
-      fetchLeads();
-    }
-  }, [fetchTrigger]);
+
 
   return (
     <ThemeContext.Provider value={{

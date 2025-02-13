@@ -7,6 +7,7 @@ import { ThemeContext } from "../../Context/Context";
 import moment from "moment";
 
 const MyLeads = () => {
+  // State variables
   const [searchTerm, setSearchTerm] = useState("");
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,234 +17,319 @@ const MyLeads = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [leadsPerPage, setLeadPerPage] = useState(40);
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedLeads, setSelectedLeads] = useState([]);
   const totalLeadData = useContext(ThemeContext);
-
 
   const fetchLeads = async (page = 1) => {
     setLoading(true);
     try {
       const uploaderId = Cookies.get("userId");
       if (!uploaderId) {
-        setError("User ID not found.");
+        toast.error("User  ID not found.");
         setLoading(false);
         return;
       }
+
+      const params = {
+        uploaderId,
+        page,
+        limit: leadsPerPage,
+        search: searchTerm,
+        startDate,
+        endDate,
+        approvalStatus: selectedStatus !== "all" ? selectedStatus : undefined,
+      };
+
       const response = await axios.get("http://localhost:3000/get-leads", {
         headers: { "Content-Type": "application/json" },
-        params: { uploaderId, page, limit: leadsPerPage },
+        params,
       });
-      const leadsData =
-        response?.data?.data?.map((lead) => ({
-          ...lead,
-          approvalStatus: lead.accounts?.some(
-            (acc) => acc.status === "Accepted"
-          )
-            ? "Accepted"
-            : "Rejected",
-        })) || [];
 
-      setLeads(leadsData);
+      setLeads(response?.data?.data || []);
       setTotalPages(response?.data?.totalPages || 0);
+      setCurrentPage(page);
       setError(null);
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to fetch leads.");
+      toast.error(err?.response?.data?.message || "Failed to fetch leads.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchLeads(currentPage);
-  }, [currentPage]);
+    const delayDebounce = setTimeout(() => {
+      setCurrentPage(1); // Reset to first page on filter change
+      fetchLeads(1); // Fetch leads with updated filters
+    }, 500);
 
-  const filteredLeads = leads.filter((lead) => {
-    Object.values(lead).some(
-      (value) =>
-        typeof value === "string" &&
-        value.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const leadDate = moment(lead.createdAt).format("YYYY-MM-DD");
-    return (
-      (!startDate || leadDate >= startDate) &&
-      (!endDate || leadDate <= endDate) &&
-      Object.values(lead).some(
-        (value) =>
-          typeof value === "string" &&
-          value.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  });
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm, startDate, endDate, selectedStatus, leadsPerPage]);
+
+  useEffect(() => {
+    fetchLeads(currentPage);
+  }, [currentPage, totalLeadData.fetchTrigger]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this Lead?")) return;
     try {
-      const response = await axios.delete(
-        `http://localhost:3000/delete-lead/${id}`
-      );
-      if (response.data.message === "success") {
-        setLeads((prevLeads) => prevLeads.filter((lead) => lead._id !== id));
-        toast.success("Lead deleted successfully");
-      } else {
-        throw new Error(response.data.message || "Failed to delete lead");
-      }
+      await axios.delete(`http://localhost:3000/delete-lead/${id}`);
+      fetchLeads(currentPage);
+      toast.success("Lead deleted successfully");
     } catch (error) {
       toast.error("Failed to delete lead. Please try again.");
     }
   };
 
-  const csvData = filteredLeads.map((lead, index) => ({
-    "#": (currentPage - 1) * leadsPerPage + index + 1,
+  const handleBulkDelete = async () => {
+    if (!selectedLeads.length || !window.confirm("Delete selected leads?"))
+      return;
+    try {
+      await axios.post("/leads/bulk-delete", { ids: selectedLeads });
+      fetchLeads(currentPage);
+      setSelectedLeads([]);
+      toast.success(`${selectedLeads.length} leads deleted successfully`);
+    } catch (error) {
+      toast.error("Bulk delete failed");
+    }
+  };
+
+  const csvData = leads.map((lead, index) => ({
+    "#": index + 1,
     Name: lead.name || "N/A",
     Phone: lead.phone || "N/A",
     Email: lead.email || "N/A",
     Status: lead.approvalStatus || "N/A",
+    "Created At": lead.createdAt
+      ? moment(lead.createdAt).format("MM/DD/YYYY")
+      : "N/A",
   }));
 
+  const statusFilters = [
+    { label: "All", value: "all", color: "bg-white" },
+    { label: "Accepted", value: "Accepted", color: "bg-white" },
+    { label: "Rejected", value: "Rejected", color: "bg-white" },
+    { label: "Pending", value: "Pending", color: "bg-white" },
+  ];
+
+  const filteredLeads = leads.filter((lead) => {
+    const matchesSearchTerm =
+      lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      selectedStatus === "all" || lead.approvalStatus === selectedStatus;
+
+    return matchesSearchTerm && matchesStatus;
+  });
+
   const renderPagination = () => {
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      if (
-        i === 1 ||
-        i === totalPages ||
-        (i >= currentPage - 2 && i <= currentPage + 2)
-      ) {
-        pages.push(i);
-      } else if (pages[pages.length - 1] !== "...") {
-        pages.push("...");
-      }
-    }
+    if (totalPages <= 1) return null;
 
     return (
-      <div className="flex justify-center mt-4">
-        {pages.map((page, index) => (
-          <button
-            key={index}
-            className={`px-3 py-1 mx-1 border rounded ${
-              page === currentPage
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-            }`}
-            onClick={() => typeof page === "number" && setCurrentPage(page)}
-            disabled={typeof page !== "number"}
-          >
-            {page}
-          </button>
-        ))}
+      <div className="flex justify-center mt-4 gap-2">
+        <button
+          className={`px-3 py-1 border rounded ${
+            currentPage === 1 ? "bg-gray-200" : "bg-white hover:bg-blue-50"
+          }`}
+          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+
+        <span className="px-3 py-1">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          className={`px-3 py-1 border rounded ${
+            currentPage === totalPages
+              ? "bg-gray-200"
+              : "bg-white hover:bg-blue-50"
+          }`}
+          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
       </div>
     );
   };
 
   return (
     <div className="w-[82%] p-4 ml-[15%]">
-      <div className="flex justify-between">
-        <h2 className="text-2xl font-bold mb-4">My Leads</h2>
-        <p>Total leads are {totalLeadData.allData} </p>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Lead Management</h1>
+        <div className="flex items-center gap-4">
+          <span className="bg-gray-50 text-black px-3 py-1 rounded-md">
+            Total Leads: {totalLeadData.allData} 
+          </span>
+          <CSVLink
+            data={csvData}
+            filename="MyLeads.csv"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+          >
+            Export CSV
+          </CSVLink>
+        </div>
       </div>
-      <div className="flex justify-between">
-        <input
-          type="text"
-          placeholder="Search leads..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border px-3 py-1 mb-4 w-[30%]"
-        />
 
-        <div className="flex w-[40%]">
+  
+      <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <input
-            type="date"
-            placeholder="Search date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="border px-3 py-1 mb-4 w-[45%]"
+            type="text"
+            placeholder="Search leads..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <p className="font-bold">To</p>
-          <input
-            type="date"
-            placeholder="Search date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border px-3 py-1 mb-4 w-[45%]"
-          />
+
+
+          <div className="flex gap-2">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border px-3 py-2 rounded flex-1"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="border px-3 py-2 rounded flex-1"
+            />
+          </div>
+
+          <select
+            value={leadsPerPage}
+            onChange={(e) => setLeadPerPage(Number(e.target.value))}
+            className="border w-[20%] px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={40}>40</option>
+          </select>
         </div>
 
-        <select
-    className="border px-2 py-2 rounded-md w-[6%] h-10"
-    value={leadsPerPage}  
-    onChange={(e) => {
-      const selectedValue = e.target.value === "all" ? "all" : Number(e.target.value);
-      setLeadPerPage(selectedValue);
-    }}
-  >
-    <option value={10}>10</option>
-    <option value={20}>20</option>
-    <option value={40}>40</option>
-    <option value="all">All</option>
-  </select>
-        <CSVLink
-          data={csvData}
-          filename="MyLeads.csv"
-          className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-        >
-          Download CSV
-        </CSVLink>
+        <div className="flex flex-wrap gap-2 mb-4 ">
+          {statusFilters.map((filter) => (
+            <button
+              key={filter.value}
+              onClick={() => {
+                setSelectedStatus(filter.value);
+                setCurrentPage(1);
+              }}
+              className={`px-4 py-2 rounded-md transition-all border shadow-lg  ${
+                selectedStatus === filter.value
+                  ? "bg-blue-500 text-white shadow-lg"
+                  : `${filter.color} hover:opacity-90`
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
       </div>
-      {loading ? (
-        <div className="flex justify-center items-center h-40">Loading...</div>
-      ) : filteredLeads.length > 0 ? (
-        <>
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border p-2">#</th>
-                <th className="border p-2">Name</th>
-                <th className="border p-2">Phone</th>
-                <th className="border p-2">Email</th>
-                <th className="border p-2">Status</th>
-                <th className="border p-2">Created At</th>
-                <th className="border p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredLeads.map((lead, index) => (
-                <tr key={lead._id} className="border-t text-center">
-                  <td className="border p-2">
-                    {(currentPage - 1) * leadsPerPage + index + 1}
-                  </td>
-                  <td className="border p-2">{lead.name || "N/A"}</td>
-                  <td className="border p-2">{lead.phone || "N/A"}</td>
-                  <td className="border p-2">{lead.email || "N/A"}</td>
-                  <td className="border p-2">{lead.approvalStatus || "N/A"}</td>
-                  <td className="border p-2">
-                    {lead.createdAt
-                      ? (() => {
-                          const date = new Date(lead.createdAt);
-                          const mm = String(date.getMonth() + 1).padStart(
-                            2,
-                            "0"
-                          );
-                          const dd = String(date.getDate()).padStart(2, "0");
-                          const yyyy = date.getFullYear();
-                          return `${mm}/${dd}/${yyyy}`;
-                        })()
-                      : "N/A"}
-                  </td>
-                  <td className="border p-2">
-                    <button
-                      className="bg-white text-black px-2 py-1 rounded shadow-md"
-                      onClick={() => handleDelete(lead._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {renderPagination()}
-        </>
-      ) : (
-        <p>No leads found.</p>
+
+      {selectedLeads.length > 0 && (
+        <div className="bg-yellow-100 p-3 rounded-lg mb-4 flex justify-between items-center">
+          <span>{filteredLeads.length} leads found</span>
+          <span>{filteredLeads.length} leads found</span>
+
+          <button
+            onClick={handleBulkDelete}
+            className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 shadow-lg transition-colors"
+          >
+            Delete Selected
+          </button>
+        </div>
       )}
+
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        {loading ? (
+          <div className="p-4 text-center">Loading leads...</div>
+        ) : leads.length > 0 ? (
+          <>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedLeads.length === leads.length}
+                        onChange={(e) =>
+                          setSelectedLeads(
+                            e.target.checked ? leads.map((l) => l._id) : []
+                          )
+                        }
+                      />
+                    </th>
+                    <th className="px-4 py-3">Name</th>
+                    <th className="px-4 py-3">Contact</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Created</th>
+                    <th className="px-4 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredLeads.map((lead) => (
+                    <tr key={lead._id} className="hover:bg-gray-50 text-center">
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedLeads.includes(lead._id)}
+                          onChange={(e) =>
+                            setSelectedLeads(
+                              e.target.checked
+                                ? [...selectedLeads, lead._id]
+                                : selectedLeads.filter((id) => id !== lead._id)
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="px-4 py-3">{lead.name || "N/A"}</td>
+                      <td className="px-4 py-3">{lead.phone || "N/A"}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`px-2 py-1 rounded ${
+                            lead.approvalStatus === "Accepted"
+                              ? "bg-green-100 text-green-800"
+                              : lead.approvalStatus === "Rejected"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {lead.approvalStatus || "N/A"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        {lead.createdAt
+                          ? moment(lead.createdAt).format("MMM D, YYYY")
+                          : "N/A"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          className="bg-white shadow-md  text-black px-3 py-1 rounded hover:bg-gray-200"
+                          onClick={() => handleDelete(lead._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {renderPagination()}
+          </>
+        ) : (
+          <div className="p-4 text-center">No leads found.</div>
+        )}
+      </div>
     </div>
   );
 };

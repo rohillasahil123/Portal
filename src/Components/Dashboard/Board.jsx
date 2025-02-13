@@ -19,7 +19,7 @@ const Dashboard = () => {
     useContext(ThemeContext);
 
   useEffect(() => {
-    setFetchTrigger(true);
+    setFetchTrigger(false);
   }, [setFetchTrigger]);
 
   const data = [

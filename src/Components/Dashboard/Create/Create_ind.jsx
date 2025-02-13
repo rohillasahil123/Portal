@@ -24,24 +24,27 @@ const CreateInd = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => { 
     e.preventDefault();
-    const response =await axios.post("http://localhost:3000/admin/create-partner",{
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      desinationType:"individual",
-      uploaderId :userId
-    })
-    console.log(response)
-    if(response.status === 201){
-      navigate("/admin")
-      toast.success("Partner Created Successfully!");
+    try {
+      const response = await axios.post("http://localhost:3000/admin/create-partner", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        desinationType: "individual",
+        uploaderId: userId
+      });
+  console.log(response)
+      if(response.data.status === 201) {  
+        PartnerData.setFetchTrigger(prev => !prev);
+        toast.success("Partner Created Successfully!");
+        navigate("/admin");
+      }
+    } catch (error) {
+      toast.error("Error creating partner");
     }
-     console.log("Form Data:", formData);
     setFormData({ name: "", email: "", password: "" });
   };
-
   return (
     <div className="flex justify-center  w-full items-center min-h-screen ">
       <div className="bg-white shadow-xl rounded-xl p-6 w-full max-w-md">

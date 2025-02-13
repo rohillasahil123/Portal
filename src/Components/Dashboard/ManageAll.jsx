@@ -13,6 +13,7 @@ const PartnerTable = () => {
   useEffect(() => {
     if (PartnerData?.partnerShow) {
       setDataPartner(PartnerData.partnerShow);
+    console.log(dataPartner , "partner")
     }
   }, [PartnerData]);
 
@@ -55,27 +56,27 @@ const PartnerTable = () => {
         >
           <option value={10}>10</option>
           <option value={50}>50</option>
-          <option value={100}>100</option>
+          <option value={100}>100</option>  
         </select>
       </div>
 
-      <table className="w-full">
-        <thead className="w-full">
+      <table className="w-full border" >
+        <thead className="w-full border">
           <tr className="bg-gray-100">
-            <th className="px-4 py-2">Username</th>
+          <th className="px-4 py-2">Index</th> 
+            <th className="px-4 py-2">Email</th>
             <th className="px-4 py-2">Type</th>
-            <th className="px-4 py-2">Assigned</th>
-            <th className="px-4 py-2">Phone</th>
+           
             <th className="px-4 py-2">Action</th>
           </tr>
         </thead>
-        <tbody className="text-center">
-          {dataPartner.map((partner) => (
+        <tbody className="text-center border">
+          {dataPartner.map((partner , index) => (
             <tr key={partner._id}>
-              <td className="px-4 py-2">{partner.name}</td>
+                 <th className="px-4 py-2">{index +1 }</th>
+              <td className="px-4 py-2">{partner.email}</td>
               <td className="px-4 py-2">{partner.desinationType}</td>
-              <td className="px-4 py-2">{partner.partnerStatus}</td>
-              <td className="px-4 py-2">{partner.phone}</td>
+             
               <td className="px-4 py-2 space-x-2">
                 <button
                   onClick={() => handleEdit(partner._id)}

@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , useContext } from "react";
 import { toast } from "react-hot-toast";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import {ThemeContext} from "../../../Context/Context"
 
 const CreatePartner = () => {
+  const PartnerData = useContext(ThemeContext)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,6 +15,7 @@ const CreatePartner = () => {
   const [userId , setUserId] = useState("");
 
   useEffect(()=>{
+  
     const uploaderId = Cookies.get("userId") 
     setUserId(uploaderId)
   })
@@ -24,21 +27,27 @@ const CreatePartner = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit =async (e) => {
+
+
+  const handleSubmit = async (e) => { 
     e.preventDefault();
-    const response =await axios.post("http://localhost:3000/admin/create-partner",{
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      desinationType:"Partner",
-      uploaderId :userId
-    })
-    console.log(response)
-    if(response.status === 201){
-      navigate("/admin")
-      toast.success("Partner Created Successfully!");
+    try {
+      const response = await axios.post("http://localhost:3000/admin/create-partner", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        desinationType: "Partner",
+        uploaderId: userId
+      });
+  
+      if(response.status === 201) {  
+        PartnerData.setFetchTrigger(prev => !prev);
+        toast.success("Partner Created Successfully!");
+        navigate("/admin");
+      }
+    } catch (error) {
+      toast.error("Error creating partner");
     }
-     console.log("Form Data:", formData);
     setFormData({ name: "", email: "", password: "" });
   };
 
