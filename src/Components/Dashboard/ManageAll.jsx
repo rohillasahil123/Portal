@@ -13,7 +13,7 @@ const PartnerTable = () => {
   useEffect(() => {
     if (PartnerData?.partnerShow) {
       setDataPartner(PartnerData.partnerShow);
-    console.log(dataPartner , "partner")
+    console.log(dataPartner,"partner")
     }
   }, [PartnerData]);
 

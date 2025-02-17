@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../../Context/Context";
 import {
   LineChart,
@@ -8,48 +8,57 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from "recharts";  
 import { GiCrossMark } from "react-icons/gi";
-import { FaUser, FaDollarSign, FaUsers, FaCheckCircle } from "react-icons/fa";
+import { FaUsers, FaDollarSign, FaCheckCircle, FaUser } from "react-icons/fa";
 import Tabledata from "./Tabledata";
-import bgImage from "../../assets/bg.jpg"
+import bgImage from "../../assets/bg.jpg";
 
 const Dashboard = () => {
-  const { user, leads, progress, approve, reject, setFetchTrigger } =
-    useContext(ThemeContext);
+  const { user, leads, progress, approve, reject, fetchTrigger, setFetchTrigger } = useContext(ThemeContext);
+  
+  const [chartData, setChartData] = useState([]); // state for the chart data
 
   useEffect(() => {
     setFetchTrigger(false);
-  }, [setFetchTrigger]);
+    console.log(fetchTrigger, "r");
 
-  const data = [
-    { name: "Jan", sales: leads },
-    { name: "Feb", sales: leads },
-    { name: "Mar", sales: leads },
-    { name: "Apr", sales: leads },
-    { name: "May", sales: 90 },
-    { name: "Jun", sales: leads },
-    { name: "Jul", sales: leads },
-    { name: "Aug", sales: leads },
-    { name: "Sep", sales: leads },
-    { name: "Oct", sales: leads },
-    { name: "Nov", sales: leads },
-    { name: "Dec", sales: leads },
-  ];
+   
+    const fetchedData = [
+      { name: "Jan", sales: leads },
+      { name: "Feb", sales: leads },
+      { name: "Mar", sales: leads },
+      { name: "Apr", sales: leads },
+      { name: "May", sales: leads },
+      { name: "Jun", sales: leads },
+      { name: "Jul", sales: leads },
+      { name: "Aug", sales: leads },
+      { name: "Sep", sales: leads },
+      { name: "Oct", sales: leads },
+      { name: "Nov", sales: leads },
+      { name: "Dec", sales: leads },
+    ];
+    setChartData(fetchedData);
+  }, [fetchTrigger, leads]);
+
+  const data = chartData;
+
+  const approvePercentage = ((approve / leads) * 100).toFixed(2);
+  const rejectPercentage = ((reject / leads) * 100).toFixed(2);
 
   return (
     <div
       className="p-8 min-h-screen bg-cover bg-center bg-no-repeat ml-0 sm:ml-[12%]"
       style={{
-        backgroundImage:  `url(${bgImage})`,
+        backgroundImage: `url(${bgImage})`,
       }}
     >
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-4 mb-8">
         <MetricCard title="Total Leads" value={leads} icon={<FaUsers />} />
-        <MetricCard title="Progress" value={progress} icon={<FaDollarSign />} />
+        <MetricCard title="Progress soon" value={progress} icon={<FaDollarSign />} />
         <MetricCard title="Approval" value={approve} icon={<FaCheckCircle />} />
         <MetricCard title="Rejected" value={reject} icon={<GiCrossMark />} />
-        <MetricCard title="Total Users" value={user} icon={<FaUser />} />
+        <MetricCard title="Single Leads" value={user} icon={<FaUser />} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:overflow-hidden">
@@ -78,8 +87,8 @@ const Dashboard = () => {
           <div className="bg-white p-6 rounded-lg shadow sm:max-w-md h-[100%] w-[44%] sm:w-[65%] sm:mx-auto">
             <h3 className="text-xl font-semibold mb-4">Today Leads</h3>
             <ul className="space-y-1">
-              <li>Disbursed: {approve}</li>
-              <li>Rejected: {reject}</li>
+              <li>Disbursed: {approve} ({approvePercentage}%)</li>
+              <li>Rejected: {reject} ({rejectPercentage}%)</li>
             </ul>
           </div>
         </div>

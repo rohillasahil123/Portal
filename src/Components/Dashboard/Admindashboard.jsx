@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext , useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { CircularProgress } from "@mui/material";
 import {
@@ -9,26 +9,32 @@ import {
   LineElement,
   Title,
 } from "chart.js";
-import {ThemeContext} from "../../Context/Context"
+import { ThemeContext } from "../../Context/Context";
 import { Link } from "react-router-dom";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title);
 
 const AdminDashboard = () => {
-  const { allData, adminRejected , adminSuccess, progress } = useContext(ThemeContext)
+  const { allData, adminRejected, adminSuccess, setFetchTrigger, fetchTrigger } = useContext(ThemeContext);
 
+  useEffect(() => {
+    setFetchTrigger(true);  
+    console.log(fetchTrigger , "r768676");
+  }, [setFetchTrigger]);
+
+  // Dynamically update chartData based on adminSuccess and adminRejected
   const chartData = {
     labels: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
         label: "DSA Partner",
-        data: [100, 200, 300, 400, 300, 200, 100, 500],
+        data: [adminSuccess, adminRejected, 300, 400, 300, 200, 100, 500],  // Modify data according to the context values
         borderColor: "blue",
         fill: false,
       },
       {
         label: "Individual Partner",
-        data: [500, 400, 300, 200, 300, 400, 500, 200],
+        data: [500, 400, 300, 200, 300, 400, 500, 200], // Modify data as needed
         borderColor: "green",
         fill: false,
       },
@@ -57,36 +63,41 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex flex-wrap justify-between">
-        {/* Visitor Statistics */}
         <div className="w-3/5 mb-4">
-          <h3 className="text-xl font-bold mb-2">Login Details</h3>
+          <h3 className="text-xl font-bold mb-2">Lead Details</h3>
           <Line data={chartData} />
         </div>
 
         <div className="w-1/3 mt-16 bg-gray-100 text-center rounded-md p-4">
-          <h3 className="text-lg font-bold mt-2 mb-4">Tasks</h3>
-          <div className="relative flex flex-col items-center">
-            <div className="absolute">
-              <CircularProgress
-                variant="determinate"
-                value={100}
-                size={140}
-                thickness={5}
-                sx={{ color: "sky" }}
-              />
-            </div>
-            <CircularProgress
-              variant="determinate"
-              value={80}
-              size={140}
-              thickness={5}
-              sx={{ color: "Gray" }}
-            />
-            <p className="mt-2 text-2xl font-bold">100%</p>
-          </div>
-        </div>
+  <h3 className="text-lg font-bold mt-2 mb-4">Leads</h3>
+  <div className="relative flex flex-col items-center">
+    <div className="absolute">
+   
+      <CircularProgress
+        variant="determinate"
+        value={100}
+        size={140}
+        thickness={5}
+        sx={{ color: "sky" }}
+      />
+    </div>
+   
+    <CircularProgress
+      variant="determinate"
+      value={adminSuccess ? (adminSuccess / allData) * 100 : 0}
+      size={140}
+      thickness={5}
+      sx={{ color: "gray" }}
+    />
+    <p className="mt-2 text-lg font-bold">
+      {adminSuccess ? `${((adminSuccess / allData) * 100).toFixed(2)}%` : "0%"}
+      Success
+    </p>
+  </div>
+</div>
+
+   
       </div>
 
       {/* Meet-Up Invite */}

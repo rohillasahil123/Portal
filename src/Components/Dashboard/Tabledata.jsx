@@ -6,10 +6,9 @@ const App = () => {
   const lenderdata = useContext(ThemeContext);
 
   useEffect(() => {
-    console.log("Context Data:", lenderdata);
     if (lenderdata && lenderdata.allData) {
       setLender(lenderdata.allData);
-      console.log("Setting Lender Data:", lenderdata.allData);
+      console.log("Setting Lender Dataqa:", lenderdata.allData);
     }
   }, [lenderdata]); 
    

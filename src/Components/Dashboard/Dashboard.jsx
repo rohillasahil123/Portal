@@ -20,6 +20,7 @@ import LenderList from "./LenderList/LenderList";
 import { Toaster } from "react-hot-toast";
 import Deleteilist from "./Delete/Deleteilist";
 import Protect from "../Protetcted/Protect";
+import Charts from "./Charts";
 
 const Dashboard = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -115,14 +116,14 @@ const Dashboard = () => {
                 </Protect>
               }
             />
-            <Route
+            {/* <Route
               path="/profile"
               element={
                 <Protect>
                   <Profile />
                 </Protect>
               }
-            />
+            /> */}
             <Route
               path="/list"
               element={
@@ -140,6 +141,7 @@ const Dashboard = () => {
               }
             />
             <Route path="/" element={<Loginpage />} />
+            <Route path="/chart" element={<Charts/>} />
           </Routes>
         </div>
       </div>

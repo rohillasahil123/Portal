@@ -41,8 +41,7 @@ const Dashboard = () => {
     { path: "/EmiCalculator", label: "EMI Calculator", showFor: ["admin", "DSA", "individual"] },
     { path: "/myleads", label: "My Leads", showFor: ["admin", "individual", "DSA"] },
     { path: "/admin", label: "Admin Dashboard", showFor: ["admin"] },
-    { path: "/manage/Partner", label: "Manage Partners", showFor: ["admin"] },
-    { path: "/profile", label: "Profile", showFor: ["admin", "individual" , "DSA"] },
+    { path: "/manage/Partner", label: "Manage Partners", showFor: ["admin"] }
   ];
 
   if (!isLoggedIn) return null;

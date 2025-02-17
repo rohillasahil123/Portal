@@ -1,10 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { FestivalTwoTone } from "@mui/icons-material";
-
 export const ThemeContext = createContext(null);
-
 export const ThemeProvider = ({ children }) => {
   const [allData, setAllData] = useState(null);
   const [leads, setLeads] = useState(null);
@@ -20,6 +17,7 @@ export const ThemeProvider = ({ children }) => {
   const [partnerShow, setPartnerShow] = useState(null);
 
   
+  useEffect(()=>{
   const getData = async () => {
     try {
       const response = await axios.get("http://localhost:3000/getAllData/partners/leads");
@@ -27,12 +25,17 @@ export const ThemeProvider = ({ children }) => {
       setAllData(response.data.totalLeads);
       setAdminSuccess(response.data.successLeads)
       setAdminRejected(response.data.rejectedLeads)
+      
     } catch (error) {
       console.error("Error fetching all data:", error);
     }
+
   };
+  getData()
+},[allData])
 
   // Fetch leads data
+  useEffect(()=>{
   const fetchLeads = async () => {
     if (!userId) return;
     try {
@@ -44,23 +47,14 @@ export const ThemeProvider = ({ children }) => {
       setApprove(response.data.approvedUsers);
       setReject(response.data.rejectedUsers);
       setProgress(response.data.processingLeads);
+     
     } catch (err) {
       console.error("Error fetching leads:", err);
     }
   };
+  fetchLeads();
+}, [userId , fetchTrigger , allData])
  
-  useEffect(() => {  
-    const fetchData = async () => {
-      await fetchLeads();
-      await getData();
-    }
-    fetchData();
-  }, [fetchTrigger]); 
-
- 
-  useEffect(() => {
-    fetchLeads();
-  }, [userId]);
 
  
   useEffect(() => {
@@ -69,7 +63,6 @@ export const ThemeProvider = ({ children }) => {
         setUserId(newUserId);
       }
   }, [userId]);
-
 
 
   return (

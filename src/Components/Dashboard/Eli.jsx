@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Make sure axios is imported
-import toast from "react-hot-toast"; // Assuming you're using react-hot-toast
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Eli = () => {
   const [step, setStep] = useState(1);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,22 +17,35 @@ const Eli = () => {
     income: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
+
+
+
+  const validateFields = () => {
+    for (const key in formData) {
+      if (!formData[key]) {
+        toast.error(`Please fill out ${key.replace(/([A-Z])/g, " $1")}`);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (!validateFields()) return;
+
     setLoading(true);
-    setError(null);
     try {
-      const response = await axios.post("https://credmantra.com/api/v1/auth/eli", formData);
+      await axios.post("https://credmantra.com/api/v1/auth/eli", formData);
       toast.success("Checking eligibility, Please wait...");
       navigate("/lenderlist");
-      setLoading(false);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
+    } finally {
       setLoading(false);
     }
   };
@@ -40,14 +54,19 @@ const Eli = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleNext = () => setStep(step + 1);
+  const handleNext = () => {
+    if (formData.name && formData.phone && formData.email && formData.amount) {
+      setStep(step + 1);
+    } else {
+      toast.error("Please fill out all required fields.");
+    }
+  };
+
   const handleBack = () => setStep(step - 1);
 
   return (
-    <div className="h-screen flex items-center justify-center ">
-      <div className="w-full max-w-2xl bg-white p-6 sm:p-8 rounded-xl shadow-xl overflow-hidden relative">
-        {/* Wave effect using a pseudo element */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-gray-200 to-gray-400 opacity-50 rounded-xl -z-10"></div>
+    <div className="h-screen flex items-center justify-center">
+      <div className="w-full max-w-2xl bg-white p-6 sm:p-8 rounded-xl shadow-xl relative">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">Check Eligibility</h1>
         <form onSubmit={handleFormSubmit} className="space-y-6">
           {step === 1 && (
@@ -60,7 +79,7 @@ const Eli = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                     placeholder="Enter full name"
                   />
                 </div>
@@ -71,7 +90,7 @@ const Eli = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                     placeholder="Enter phone number"
                   />
                 </div>
@@ -85,7 +104,7 @@ const Eli = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                     placeholder="Enter email"
                   />
                 </div>
@@ -96,7 +115,7 @@ const Eli = () => {
                     name="amount"
                     value={formData.amount}
                     onChange={handleChange}
-                    className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                     placeholder="Enter amount"
                   />
                 </div>
@@ -106,7 +125,7 @@ const Eli = () => {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="w-32 py-2 bg-white text-black rounded-md border shadow-md hover:bg-gray-200 transition-all duration-300"
+                  className="w-32 py-2 bg-white text-black rounded-md border shadow-md hover:bg-gray-200"
                 >
                   Next
                 </button>
@@ -124,7 +143,7 @@ const Eli = () => {
                     name="dob"
                     value={formData.dob}
                     onChange={handleChange}
-                    className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                   />
                 </div>
                 <div className="flex-1">
@@ -134,7 +153,7 @@ const Eli = () => {
                     name="pincode"
                     value={formData.pincode}
                     onChange={handleChange}
-                    className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                     placeholder="Enter pincode"
                   />
                 </div>
@@ -146,7 +165,7 @@ const Eli = () => {
                   name="employmentType"
                   value={formData.employmentType}
                   onChange={handleChange}
-                  className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                 >
                   <option value="">Select an option</option>
                   <option value="Salaried">Salaried</option>
@@ -161,7 +180,7 @@ const Eli = () => {
                   name="income"
                   value={formData.income}
                   onChange={handleChange}
-                  className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="mt-2 p-3 w-full border border-gray-300 rounded-md"
                   placeholder="Enter your income"
                 />
               </div>
@@ -170,13 +189,13 @@ const Eli = () => {
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="py-2 px-6 border border-gray-400 text-gray-600 rounded-md hover:bg-gray-100 transition-all duration-300"
+                  className="py-2 px-6 border border-gray-400 text-gray-600 rounded-md hover:bg-gray-100"
                 >
                   Back
                 </button>
                 <button
                   type="submit"
-                  className="py-2 px-6 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-300"
+                  className="py-2 px-6 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 >
                   Submit
                 </button>

@@ -38,7 +38,7 @@ const Profile = () => {
       </div>
 
       <div className="flex-1 mt-[5%]">
-        <h2 className="text-2xl font-bold mb-2">Sahil Rohilla</h2>
+        <h2 className="text-2xl font-bold mb-2">Md </h2>
         
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-2">Contact Information</h3>
