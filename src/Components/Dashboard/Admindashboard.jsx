@@ -21,20 +21,19 @@ const AdminDashboard = () => {
     setFetchTrigger(true);  
     console.log(fetchTrigger , "r768676");
   }, [setFetchTrigger]);
-
-  // Dynamically update chartData based on adminSuccess and adminRejected
+  
   const chartData = {
     labels: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
         label: "DSA Partner",
-        data: [adminSuccess, adminRejected, 300, 400, 300, 200, 100, 500],  // Modify data according to the context values
+        data: [adminSuccess, adminRejected, 300, 400, 300, 200, 100, 500],
         borderColor: "blue",
         fill: false,
       },
       {
         label: "Individual Partner",
-        data: [500, 400, 300, 200, 300, 400, 500, 200], // Modify data as needed
+        data: [500, 400, 300, 200, 300, 400, 500, 200],
         borderColor: "green",
         fill: false,
       },
@@ -79,7 +78,7 @@ const AdminDashboard = () => {
         value={100}
         size={140}
         thickness={5}
-        sx={{ color: "sky" }}
+        sx={{ color: "blue" }}
       />
     </div>
    
@@ -88,7 +87,7 @@ const AdminDashboard = () => {
       value={adminSuccess ? (adminSuccess / allData) * 100 : 0}
       size={140}
       thickness={5}
-      sx={{ color: "gray" }}
+      sx={{ color: "orange" }}
     />
     <p className="mt-2 text-lg font-bold">
       {adminSuccess ? `${((adminSuccess / allData) * 100).toFixed(2)}%` : "0%"}
@@ -96,11 +95,7 @@ const AdminDashboard = () => {
     </p>
   </div>
 </div>
-
-   
       </div>
-
-      {/* Meet-Up Invite */}
       <div className="bg-gray-100 p-6 rounded-md mt-6">
         <h3 className="text-xl font-bold mb-2">Create DSA or Individual Partner</h3>
         <div className="mt-4 flex gap-4">

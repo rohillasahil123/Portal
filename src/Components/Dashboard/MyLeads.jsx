@@ -15,10 +15,12 @@ const MyLeads = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [approvalFilter, setApprovalFilter] = useState("All");
-  const { setFetchTrigger, fetchTrigger , leads , reject ,approve} = useContext(ThemeContext);
+  const { setFetchTrigger, fetchTrigger, leads, reject, approve } = useContext(ThemeContext);
+  const { loading, setLoading } = useState(false);
 
   const [limit, setLimit] = useState(40);
   const totalPages = Math.ceil(totalLead / limit);
+
   useEffect(() => {
     const fetchLeads = async () => {
       const userId = Cookies.get("userId");
@@ -31,31 +33,32 @@ const MyLeads = () => {
             search: searchTerm,
             startDate,
             endDate,
-            filterType: approvalFilter, 
+            filterType: approvalFilter,
           },
         });
-  
+
         const records = response.data?.records || [];
         const totalLeads = response.data?.totalLeads || 0;
-  
+
         const updatedRecords = records.map((item) => ({
           ...item,
           approvalStatus: item.accounts?.some((acc) => acc.status === "Accepted") ? "Accepted" : "Rejected",
         }));
-  
+
         setData(updatedRecords);
         setTotalLead(totalLeads);
         applyFilters(updatedRecords);
+        console.log("1")
       } catch (error) {
         console.error(error);
         setData([]);
         setFilteredData([]);
       }
     };
-  
+
     fetchLeads();
-  }, [currentPage, searchTerm, startDate, endDate, approvalFilter, limit]);
-  
+  }, [currentPage, approvalFilter, limit]);
+
   const applyFilters = (records) => {
     let filtered = records;
     if (approvalFilter !== "All") {
@@ -82,9 +85,44 @@ const MyLeads = () => {
     }
   };
 
+  const handleDate = async (e) => {
+    const { name, value } = e.target;
+    if (name === "startDate") {
+      setStartDate(value);
+    } else if (name === "endDate") {
+      setEndDate(value);
+    }else if (name === "searchTerm") {
+      setSearchTerm(value);
+    }
+  };
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const fetchdate = async () => {
+        try {
+          const response = await axios.get("http://localhost:3000/search-leads", {
+            params: {
+              startDate,
+              endDate,
+              searchTerm
+            },
+          });
+          console.log(response?.data?.data , "2")  
+          // data Show filtered data
+          setFilteredData(response?.data?.data || []);
+          console.log(filteredData )
+          // data length 40 
+        } catch (error) {
+          console.error("Error fetching leads", error);
+        }
+      };
+      fetchdate();
+    }
+  }, [startDate, endDate , searchTerm]);
+
   useEffect(() => {
     applyFilters(data);
-  }, [approvalFilter]);
+  }, [approvalFilter]); 
 
   const totalAccepted = data.filter(
     (item) => item.approvalStatus === "Accepted"
@@ -102,33 +140,40 @@ const MyLeads = () => {
 
   return (
     <div className="container mx-auto p-5 ml-[14%]">
-      <div className="flex justify-between mb-2 h-9 gap-4">
+      <div className="flex justify-around">
+        <p>Total Leads are: <strong>{leads}</strong></p>
+        <p>Accepted Leads: <strong>{approve}</strong></p>
+        <p>Rejected Leads: <strong>{reject}</strong></p>
+      </div>
+
+      <div className="flex justify-between mb-2 h-9 gap-4 mt-4">
         <input
           type="text"
           placeholder="Search..."
+          name="searchTerm"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleDate}
           className="p-2 border rounded-md w-1/4"
         />
         <input
           type="date"
+          name="startDate"
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          onChange={handleDate}
           className="p-2 border rounded-md"
         />
         <input
           type="date"
+          name="endDate"
           value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
+          onChange={handleDate}
           className="p-2 border rounded-md"
         />
 
         <div className="flex gap-2">
           <button
             className={`px-3 py-1 h- rounded-md border ${
-              approvalFilter === "Accepted"
-                ? "bg-green-500 text-white"
-                : "bg-gray-200"
+              approvalFilter === "Accepted" ? "bg-green-500 text-white" : "bg-gray-200"
             }`}
             onClick={() => setApprovalFilter("Accepted")}
           >
@@ -136,9 +181,7 @@ const MyLeads = () => {
           </button>
           <button
             className={`px-4 py-1 rounded-md border ${
-              approvalFilter === "Rejected"
-                ? "bg-red-500 text-white"
-                : "bg-gray-200"
+              approvalFilter === "Rejected" ? "bg-red-500 text-white" : "bg-gray-200"
             }`}
             onClick={() => setApprovalFilter("Rejected")}
           >
@@ -146,9 +189,7 @@ const MyLeads = () => {
           </button>
           <button
             className={`px-4 py-1 rounded-md border ${
-              approvalFilter === "All"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
+              approvalFilter === "All" ? "bg-blue-500 text-white" : "bg-gray-200"
             }`}
             onClick={() => setApprovalFilter("All")}
           >
@@ -180,7 +221,6 @@ const MyLeads = () => {
         </button>
       </div>
 
-      {/* Table */}
       <div className="overflow-hidden rounded-lg shadow-lg border border-gray-200">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
@@ -200,7 +240,7 @@ const MyLeads = () => {
                   key={item.id || index}
                   className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
                 >
-                  <td className="py-3 px-6">{index + 1}</td>
+                   <td className="py-3 px-6">{(currentPage - 1) * limit + index + 1}</td>
                   <td className="py-3 px-6">{item.name}</td>
                   <td className="py-3 px-6">{item.email}</td>
                   <td
@@ -217,7 +257,7 @@ const MyLeads = () => {
                   </td>
                   <td className="px-4 py-3">
                     <button
-                      className="bg-white shadow-md  text-black px-3 py-1 rounded hover:bg-gray-200"
+                      className="bg-white shadow-md text-black px-3 py-1 rounded hover:bg-gray-200"
                       onClick={() => handleDelete(item._id)}
                     >
                       Delete
@@ -236,31 +276,54 @@ const MyLeads = () => {
         </table>
       </div>
 
-      <div className="flex justify-center my-4 space-x-2">
-        <button
-          className={`px-4 py-2 rounded-md border ${
-            currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 text-white"
-          }`}
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          Prev
-        </button>
 
-        <button
-          className={`px-4 py-2 rounded-md border ${
-            currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 text-white"
-          }`}
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          Next
-        </button>
-      </div>
+
+      <div className="flex justify-center my-4 space-x-2">
+  <button
+    className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+    onClick={() => setCurrentPage(1)}
+  >
+    1
+  </button>
+
+  {currentPage > 2 && <span className="px-4 py-2">...</span>} 
+
+  {currentPage > 1 && currentPage !== totalPages && (
+    <button
+      className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+      onClick={() => setCurrentPage(currentPage - 1)}
+    >
+      {currentPage - 1}
+    </button>
+  )}
+
+  <button
+    className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+  >
+    {currentPage}
+  </button>
+
+  {currentPage < totalPages && (
+    <button
+      className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+      onClick={() => setCurrentPage(currentPage + 1)}
+    >
+      {currentPage + 1}
+    </button>
+  )}
+
+  {currentPage < totalPages - 1 && <span className="px-4 py-2">...</span>} 
+
+  <button
+    className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+    onClick={() => setCurrentPage(totalPages)}
+  >
+    {totalPages}
+  </button>
+</div>
+
+
+
     </div>
   );
 };
