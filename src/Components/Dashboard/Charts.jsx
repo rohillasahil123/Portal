@@ -11,15 +11,9 @@ import { Link } from "react-router-dom";
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const Charts = () => {
-const { leads , approve, reject } =useContext(ThemeContext);
+const { approve, reject } =useContext(ThemeContext);
   const [chartData, setChartData] = useState([]);
   const [chartType, setChartType] = useState("bar");
-
-  useEffect(()=>{
-    console.log(leads)
-  })
-
-  
 
   useEffect(() => {
     const fetchLeads = async () => {

@@ -11,15 +11,15 @@ import {
 } from "chart.js";
 import { ThemeContext } from "../../Context/Context";
 import { Link } from "react-router-dom";
+import AdminChart from "./AdminChart";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title);
 
 const AdminDashboard = () => {
-  const { allData, adminRejected, adminSuccess, setFetchTrigger, fetchTrigger } = useContext(ThemeContext);
+  const { allData, adminRejected, adminSuccess, setFetchTrigger } = useContext(ThemeContext);
 
   useEffect(() => {
     setFetchTrigger(true);  
-    console.log(fetchTrigger , "r768676");
   }, [setFetchTrigger]);
   
   const chartData = {
@@ -102,6 +102,9 @@ const AdminDashboard = () => {
           <button className="bg-white text-black hover:bg-gray-300 border shadow-md py-2 px-4 rounded"><Link to='/create_user'>DSA</Link>  </button>
           <button className="bg-white text-black hover:bg-gray-300 border shadow-md  py-2 px-4 rounded"><Link to='/create_ind'>Individual</Link> </button>
         </div>
+      </div>
+      <div className="h-60%">
+       <AdminChart/>
       </div>
     </div>
   );

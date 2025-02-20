@@ -15,11 +15,10 @@ const MyLeads = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [approvalFilter, setApprovalFilter] = useState("All");
-  const { setFetchTrigger, fetchTrigger, leads, reject, approve } = useContext(ThemeContext);
-  const { loading, setLoading } = useState(false);
+  const { setFetchTrigger, leads, reject, approve } = useContext(ThemeContext);
 
   const [limit, setLimit] = useState(40);
-  const totalPages = Math.ceil(totalLead / limit);
+  const totalPages = Math.ceil(totalLead / limit); 
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -107,11 +106,10 @@ const MyLeads = () => {
               searchTerm
             },
           });
-          console.log(response?.data?.data , "2")  
-          // data Show filtered data
+
           setFilteredData(response?.data?.data || []);
           console.log(filteredData )
-          // data length 40 
+       
         } catch (error) {
           console.error("Error fetching leads", error);
         }
@@ -139,7 +137,7 @@ const MyLeads = () => {
   ];
 
   return (
-    <div className="container mx-auto p-5 ml-[14%]">
+    <div className="container w-[87%] mx-auto p-5 ml-[14%]">
       <div className="flex justify-around">
         <p>Total Leads are: <strong>{leads}</strong></p>
         <p>Accepted Leads: <strong>{approve}</strong></p>
@@ -279,7 +277,7 @@ const MyLeads = () => {
 
 
       <div className="flex justify-center my-4 space-x-2">
-  <button
+  <button 
     className="px-4 py-2 rounded-md border bg-blue-500 text-white"
     onClick={() => setCurrentPage(1)}
   >
@@ -321,9 +319,6 @@ const MyLeads = () => {
     {totalPages}
   </button>
 </div>
-
-
-
     </div>
   );
 };
