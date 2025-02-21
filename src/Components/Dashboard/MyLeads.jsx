@@ -18,7 +18,7 @@ const MyLeads = () => {
   const { setFetchTrigger, leads, reject, approve } = useContext(ThemeContext);
 
   const [limit, setLimit] = useState(40);
-  const totalPages = Math.ceil(totalLead / limit); 
+  const totalPages = Math.ceil(totalLead / limit);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -41,13 +41,17 @@ const MyLeads = () => {
 
         const updatedRecords = records.map((item) => ({
           ...item,
-          approvalStatus: item.accounts?.some((acc) => acc.status === "Accepted") ? "Accepted" : "Rejected",
+          approvalStatus: item.accounts?.some(
+            (acc) => acc.status === "Accepted"
+          )
+            ? "Accepted"
+            : "Rejected",
         }));
 
         setData(updatedRecords);
         setTotalLead(totalLeads);
         applyFilters(updatedRecords);
-        console.log("1")
+        console.log("1");
       } catch (error) {
         console.error(error);
         setData([]);
@@ -90,7 +94,7 @@ const MyLeads = () => {
       setStartDate(value);
     } else if (name === "endDate") {
       setEndDate(value);
-    }else if (name === "searchTerm") {
+    } else if (name === "searchTerm") {
       setSearchTerm(value);
     }
   };
@@ -99,28 +103,30 @@ const MyLeads = () => {
     if (startDate && endDate) {
       const fetchdate = async () => {
         try {
-          const response = await axios.get("http://localhost:3000/search-leads", {
-            params: {
-              startDate,
-              endDate,
-              searchTerm
-            },
-          });
+          const response = await axios.get(
+            "http://localhost:3000/search-leads",
+            {
+              params: {
+                startDate,
+                endDate,
+                searchTerm,
+              },
+            }
+          );
 
           setFilteredData(response?.data?.data || []);
-          console.log(filteredData )
-       
+          console.log(filteredData);
         } catch (error) {
           console.error("Error fetching leads", error);
         }
       };
       fetchdate();
     }
-  }, [startDate, endDate , searchTerm]);
+  }, [startDate, endDate, searchTerm]);
 
   useEffect(() => {
     applyFilters(data);
-  }, [approvalFilter]); 
+  }, [approvalFilter]);
 
   const totalAccepted = data.filter(
     (item) => item.approvalStatus === "Accepted"
@@ -139,9 +145,15 @@ const MyLeads = () => {
   return (
     <div className="container w-[87%] mx-auto p-5 ml-[14%]">
       <div className="flex justify-around">
-        <p>Total Leads are: <strong>{leads}</strong></p>
-        <p>Accepted Leads: <strong>{approve}</strong></p>
-        <p>Rejected Leads: <strong>{reject}</strong></p>
+        <p>
+          Total Leads are: <strong>{leads}</strong>
+        </p>
+        <p>
+          Accepted Leads: <strong>{approve}</strong>
+        </p>
+        <p>
+          Rejected Leads: <strong>{reject}</strong>
+        </p>
       </div>
 
       <div className="flex justify-between mb-2 h-9 gap-4 mt-4">
@@ -171,7 +183,9 @@ const MyLeads = () => {
         <div className="flex gap-2">
           <button
             className={`px-3 py-1 h- rounded-md border ${
-              approvalFilter === "Accepted" ? "bg-green-500 text-white" : "bg-gray-200"
+              approvalFilter === "Accepted"
+                ? "bg-green-500 text-white"
+                : "bg-gray-200"
             }`}
             onClick={() => setApprovalFilter("Accepted")}
           >
@@ -179,7 +193,9 @@ const MyLeads = () => {
           </button>
           <button
             className={`px-4 py-1 rounded-md border ${
-              approvalFilter === "Rejected" ? "bg-red-500 text-white" : "bg-gray-200"
+              approvalFilter === "Rejected"
+                ? "bg-red-500 text-white"
+                : "bg-gray-200"
             }`}
             onClick={() => setApprovalFilter("Rejected")}
           >
@@ -187,7 +203,9 @@ const MyLeads = () => {
           </button>
           <button
             className={`px-4 py-1 rounded-md border ${
-              approvalFilter === "All" ? "bg-blue-500 text-white" : "bg-gray-200"
+              approvalFilter === "All"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200"
             }`}
             onClick={() => setApprovalFilter("All")}
           >
@@ -238,7 +256,9 @@ const MyLeads = () => {
                   key={item.id || index}
                   className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
                 >
-                   <td className="py-3 px-6">{(currentPage - 1) * limit + index + 1}</td>
+                  <td className="py-3 px-6">
+                    {(currentPage - 1) * limit + index + 1}
+                  </td>
                   <td className="py-3 px-6">{item.name}</td>
                   <td className="py-3 px-6">{item.email}</td>
                   <td
@@ -274,51 +294,51 @@ const MyLeads = () => {
         </table>
       </div>
 
+      <div className="flex justify-center items-center my-4 space-x-2">
+        {currentPage > 2 && (
+          <button
+            className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+            onClick={() => setCurrentPage(1)}
+          >
+            1
+          </button>
+        )}
 
+        {currentPage > 3 && <span className="px-2">...</span>}
 
-      <div className="flex justify-center my-4 space-x-2">
-  <button 
-    className="px-4 py-2 rounded-md border bg-blue-500 text-white"
-    onClick={() => setCurrentPage(1)}
-  >
-    1
-  </button>
+        {currentPage > 1 && (
+          <button
+            className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            {currentPage - 1}
+          </button>
+        )}
 
-  {currentPage > 2 && <span className="px-4 py-2">...</span>} 
+        <button className="px-4 py-2 rounded-md border bg-blue-700 text-white font-bold">
+          {currentPage}
+        </button>
 
-  {currentPage > 1 && currentPage !== totalPages && (
-    <button
-      className="px-4 py-2 rounded-md border bg-blue-500 text-white"
-      onClick={() => setCurrentPage(currentPage - 1)}
-    >
-      {currentPage - 1}
-    </button>
-  )}
+        {currentPage < totalPages && (
+          <button
+            className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            {currentPage + 1}
+          </button>
+        )}
 
-  <button
-    className="px-4 py-2 rounded-md border bg-blue-500 text-white"
-  >
-    {currentPage}
-  </button>
+        {currentPage < totalPages - 2 && <span className="px-2">...</span>}
 
-  {currentPage < totalPages && (
-    <button
-      className="px-4 py-2 rounded-md border bg-blue-500 text-white"
-      onClick={() => setCurrentPage(currentPage + 1)}
-    >
-      {currentPage + 1}
-    </button>
-  )}
-
-  {currentPage < totalPages - 1 && <span className="px-4 py-2">...</span>} 
-
-  <button
-    className="px-4 py-2 rounded-md border bg-blue-500 text-white"
-    onClick={() => setCurrentPage(totalPages)}
-  >
-    {totalPages}
-  </button>
-</div>
+        {currentPage < totalPages && (
+          <button
+            className="px-4 py-2 rounded-md border bg-blue-500 text-white"
+            onClick={() => setCurrentPage(totalPages)}
+          >
+            {totalPages}
+          </button>
+        )}
+      </div>
     </div>
   );
 };
